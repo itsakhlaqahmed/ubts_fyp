@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubts_fyp/pages/home.dart';
-import 'package:ubts_fyp/pages/onboarding_screen.dart';
+import 'package:ubts_fyp/widgets/onboarding_screen.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -32,6 +33,7 @@ class _OnboardingState extends State<Onboarding> {
 
   int _activePageIndex = 0;
   late PageController _pagecontroller;
+  
 
   @override
   void initState() {
@@ -46,6 +48,18 @@ class _OnboardingState extends State<Onboarding> {
     // TODO: implement dispose
     _pagecontroller.dispose();
     super.dispose();
+  }
+
+  Future<void> checkFirstVisit() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool hasVisited = prefs.getBool('hasVisited') ?? false;
+
+    if (hasVisited) {
+      navigateToHome();
+      return;
+    }
+
+    prefs.setBool('hasVisited', true);
   }
 
   void nextPage() {
@@ -69,6 +83,7 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   Widget build(BuildContext context) {
+    // checkFirstVisit();
     return PageView.builder(
       controller: _pagecontroller,
       onPageChanged: (index) {

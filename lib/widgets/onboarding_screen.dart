@@ -92,7 +92,7 @@ class OnboardingScreen extends StatelessWidget {
                             width: 48,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(32),
-                              color: Colors.blue,
+                              color:  Color.fromARGB(255, 247, 161, 133),
                             ),
                             child: const Icon(
                               Icons.arrow_forward_ios_rounded,
@@ -126,7 +126,7 @@ class OnboardingScreen extends StatelessWidget {
             width: i == index ? 24 : 12,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
-              color: i == index ? Colors.indigo : Colors.blue,
+              color: i == index ? Color.fromARGB(255, 238, 144, 112) : Color.fromARGB(255, 247, 161, 133) ,
             ),
           ),
       ],
