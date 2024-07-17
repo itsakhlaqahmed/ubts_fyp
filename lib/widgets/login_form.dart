@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ubts_fyp/pages/home.dart';
+import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/widgets/text_field.dart';
 import 'package:ubts_fyp/widgets/wide_button.dart';
 // import 'package:ubts/pages/home.dart';
@@ -26,42 +28,44 @@ class _LoginFormState extends State<LoginForm> {
 
   void _submitForm() {
     bool isValid = _formKey.currentState!.validate();
-    // if (isValid) {
-    //   _formKey.currentState!.save();
-    //   _signInWithEmailAndPassword();
-    // }
+    if (isValid) {
+      _formKey.currentState!.save();
+      _signInWithEmailAndPassword();
+    }
   }
 
-  // Future<void> _signInWithEmailAndPassword() async {
-  //   try {
-  //     setState(() {
-  //       _isLoading = true;
-  //     });
-  //     await AuthService().signInWithEmailAnsPassword(
-  //       email: _userName,
-  //       password: _password,
-  //     );
-  //     Navigator.of(context).push(
-  //       MaterialPageRoute(
-  //         builder: (context) => const Home(),
-  //       ),
-  //     );
-  //   } catch (err) {
-  //     if (!mounted) return;
-  //     ScaffoldMessenger.of(context).clearSnackBars();
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text(
-  //           err.toString(),
-  //         ),
-  //       ),
-  //     );
-  //   }
+  Future<void> _signInWithEmailAndPassword() async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      await AuthService().signInWithEmailAnsPassword(
+        email: _userName,
+        password: _password,
+      );
+      
+      if (!mounted) return;
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => Home(),
+        ),
+      );
+    } catch (err) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            err.toString(),
+          ),
+        ),
+      );
+    }
 
-  //   setState(() {
-  //     _isLoading = false;
-  //   });
-  // }
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   String? _validateInput(String? value) {
     if (value == null || value.isEmpty) {
