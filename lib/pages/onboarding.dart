@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ubts_fyp/pages/home.dart';
 import 'package:ubts_fyp/pages/login.dart';
 import 'package:ubts_fyp/pages/signup.dart';
 import 'package:ubts_fyp/widgets/onboarding_screen.dart';
+import 'package:ubts_fyp/data/onboarding_screen_data.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -13,25 +13,7 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
-  final List<Map<String, String>> screenData = [
-    {
-      'title': 'Effortless Bus Tracking',
-      'description':
-          'Easily track your university bus in real-time with just a few taps.',
-      'image': 'assets/onboarding1.png',
-    },
-    {
-      'title': 'Get Driver Detail',
-      'description':
-          'Instantly access driver information for a smooth journey.',
-      'image': 'assets/onboarding2.png',
-    },
-    {
-      'title': 'Secure Information',
-      'description': 'Your data is safe and secure with us.',
-      'image': 'assets/onboarding3.png',
-    },
-  ];
+ 
 
   int _activePageIndex = 0;
   late PageController _pagecontroller;
@@ -92,7 +74,7 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   Widget build(BuildContext context) {
-    // checkFirstVisit();
+    checkFirstVisit();
     return PageView.builder(
       controller: _pagecontroller,
       onPageChanged: (index) {
