@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubts_fyp/pages/home.dart';
+import 'package:ubts_fyp/pages/login.dart';
+import 'package:ubts_fyp/pages/signup.dart';
 import 'package:ubts_fyp/widgets/onboarding_screen.dart';
 
 class Onboarding extends StatefulWidget {
@@ -45,7 +47,6 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _pagecontroller.dispose();
     super.dispose();
   }
@@ -55,7 +56,7 @@ class _OnboardingState extends State<Onboarding> {
     bool hasVisited = prefs.getBool('hasVisited') ?? false;
 
     if (hasVisited) {
-      navigateToHome();
+      navigateToLogin();
       return;
     }
 
@@ -64,7 +65,7 @@ class _OnboardingState extends State<Onboarding> {
 
   void nextPage() {
     if (_activePageIndex >= screenData.length - 1) {
-      navigateToHome();
+      navigateToSignup();
     }
 
     _pagecontroller.nextPage(
@@ -73,10 +74,18 @@ class _OnboardingState extends State<Onboarding> {
     );
   }
 
-  void navigateToHome() {
+  void navigateToLogin() {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => Home(),
+        builder: (context) => const LoginPage(),
+      ),
+    );
+  }
+
+    void navigateToSignup() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => const SignupPage(),
       ),
     );
   }
@@ -98,7 +107,7 @@ class _OnboardingState extends State<Onboarding> {
           activePageIndex: _activePageIndex,
           totalScreens: screenData.length,
           onClickNext: nextPage,
-          onSkip: navigateToHome,
+          onSkip: navigateToSignup,
         );
       },
     );
