@@ -16,7 +16,7 @@ class CustomTextField extends StatelessWidget {
   final IconData placeholderIcon;
   final bool? hideText;
   final void Function(String?) onSave;
-  final void Function(String?) onValidation;
+  final String? Function(String?) onValidation;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class CustomTextField extends StatelessWidget {
           autocorrect: false,
           keyboardType: TextInputType.visiblePassword,
           onSaved: onSave,
-          // validator: _validateInput,
+          validator: onValidation,
           decoration: InputDecoration(
             label: Row(
               children: [

@@ -31,6 +31,7 @@ class _LoginFormState extends State<LoginForm> {
     if (isValid) {
       _formKey.currentState!.save();
       _signInWithEmailAndPassword();
+      print('click');
     }
   }
 

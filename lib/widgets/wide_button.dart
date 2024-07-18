@@ -16,7 +16,9 @@ class WideButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        isLoading ? null : onSubmitForm;
+        // isLoading ? null : 
+        onSubmitForm();
+
       },
       child: Container(
         width: double.infinity,
