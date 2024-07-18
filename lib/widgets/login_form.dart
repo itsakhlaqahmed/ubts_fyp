@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ubts_fyp/pages/home.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
+import 'package:ubts_fyp/widgets/custom_snackbar.dart';
 import 'package:ubts_fyp/widgets/text_field.dart';
 import 'package:ubts_fyp/widgets/wide_button.dart';
 // import 'package:ubts/pages/home.dart';
@@ -31,7 +32,6 @@ class _LoginFormState extends State<LoginForm> {
     if (isValid) {
       _formKey.currentState!.save();
       _signInWithEmailAndPassword();
-      print('click');
     }
   }
 
@@ -44,7 +44,7 @@ class _LoginFormState extends State<LoginForm> {
         email: _userName,
         password: _password,
       );
-      
+
       if (!mounted) return;
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -55,10 +55,12 @@ class _LoginFormState extends State<LoginForm> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            err.toString(),
-          ),
+        const SnackBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(milliseconds: 5000),
+          content: CustomSnackBar(),
         ),
       );
     }
