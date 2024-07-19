@@ -111,6 +111,7 @@ class _LoginFormState extends State<LoginForm> {
             label: 'Password',
             placeholderText: 'Enter your password',
             placeholderIcon: Icons.key,
+            hideText: true,
             onSave: onSavePassword,
             onValidation: _validateInput,
           ),
