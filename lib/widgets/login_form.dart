@@ -45,7 +45,14 @@ class _LoginFormState extends State<LoginForm> {
         password: _password,
       );
 
+      
+
       if (!mounted) return;
+      SnackBarBuilder().showCustomSnackBar(
+        context,
+        snackBarType: CustomSnackbar.success,
+        text: 'You have been logged in successfully',
+      );
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => Home(),
@@ -53,14 +60,10 @@ class _LoginFormState extends State<LoginForm> {
       );
     } catch (err) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).clearSnackBars();
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBarBuilder();
-      // );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('data'),
-        ),
+      SnackBarBuilder().showCustomSnackBar(
+        context,
+        snackBarType: CustomSnackbar.error,
+        text: err.toString(),
       );
     }
 

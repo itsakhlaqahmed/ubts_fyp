@@ -1,44 +1,87 @@
 import 'package:flutter/material.dart';
 
-class SnackBarBuilder extends StatelessWidget {
-  const SnackBarBuilder({super.key});
+enum CustomSnackbar {
+  success,
+  error,
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return SnackBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      behavior: SnackBarBehavior.floating,
-      content: Container(
-        height: 100,
-        padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Color.fromARGB(240, 128, 19, 54),
-              offset: Offset(1, 1),
-              blurRadius: 8,
-            ),
-          ],
-          color: Color.fromARGB(240, 128, 19, 54),
-          borderRadius: BorderRadius.all(
-            Radius.circular(16),
+class SnackBarBuilder {
+  final Color kSuccessColor = const Color.fromARGB(255, 103, 194, 58);
+  final Color kErrorColor = const Color.fromARGB(255, 245, 108, 108);
+
+  void showCustomSnackBar(
+    BuildContext context, {
+    required CustomSnackbar snackBarType,
+    required String text,
+  }) {
+    bool isSuccessBar = snackBarType == CustomSnackbar.success;
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        content: Container(
+          // height: 300,
+          clipBehavior: Clip.hardEdge,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 16,
           ),
-        ),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Oh Snap!',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.white,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: snackBarType == CustomSnackbar.success
+                    ? kSuccessColor
+                    : kErrorColor,
+                offset: const Offset(1, 1),
+                blurRadius: 8,
               ),
+            ],
+            color: isSuccessBar ? kSuccessColor : kErrorColor,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(16),
             ),
-            // SizedBox(height: 4,),
-            Spacer(),
-            Text('There was some error while proccessing your request...'),
-          ],
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                isSuccessBar
+                    ? Icons.check_circle_outline_rounded
+                    : Icons.error_outline_outlined,
+                color: Colors.white,
+                size: 40,
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              Flexible(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isSuccessBar ? 'Hurrah!' : 'Oh Snap!',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                    // const Spacer(),
+                    Text(
+                      text,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
