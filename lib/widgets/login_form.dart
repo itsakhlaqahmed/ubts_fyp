@@ -54,13 +54,12 @@ class _LoginFormState extends State<LoginForm> {
     } catch (err) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).clearSnackBars();
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBarBuilder();
+      // );
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          duration: Duration(milliseconds: 5000),
-          content: CustomSnackBar(),
+        SnackBar(
+          content: Text('data'),
         ),
       );
     }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CustomSnackBar extends StatelessWidget {
-  const CustomSnackBar({super.key});
+class SnackBarBuilder extends StatelessWidget {
+  const SnackBarBuilder({super.key});
 
   @override
   Widget build(BuildContext context) {
