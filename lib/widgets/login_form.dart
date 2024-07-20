@@ -97,7 +97,7 @@ class _LoginFormState extends State<LoginForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomTextField(
+          CustomTextFormField(
             label: 'Student Id/Email',
             placeholderText: 'Enter your email or student ID',
             placeholderIcon: Icons.document_scanner_outlined,
@@ -107,7 +107,7 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(
             height: 24,
           ),
-          CustomTextField(
+          CustomTextFormField(
             label: 'Password',
             placeholderText: 'Enter your password',
             placeholderIcon: Icons.key,

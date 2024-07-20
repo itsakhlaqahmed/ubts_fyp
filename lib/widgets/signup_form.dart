@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ubts_fyp/pages/login.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
+import 'package:ubts_fyp/widgets/text_field.dart';
 
 class SignupForm extends StatefulWidget {
   const SignupForm({
@@ -63,9 +64,31 @@ class _SignupFormState extends State<SignupForm> {
       }
 
       setState(() {
-      _isLoading = false;
+        _isLoading = false;
       });
     }
+  }
+
+  String? _validateInput(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'This field is required';
+    }
+
+    return null;
+  }
+
+  void _saveInput(String? value) {}
+  String? _matchPassword(value) {
+    if (value == null || value.isEmpty) {
+      return 'This field is required.';
+    }
+    if (_password.length < 6) {
+      return 'Password is too small (min 6 char)';
+    }
+    if (value != _password) {
+      return 'Password doesn\'t match or Password is too small (min 6 char)';
+    }
+    return null;
   }
 
   @override
@@ -86,255 +109,48 @@ class _SignupFormState extends State<SignupForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Fullname',
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(
-                height: 6,
-              ),
-              TextFormField(
-                autocorrect: false,
-                onSaved: (value) {
-                  _fullName = value!;
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'This field is required.';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 12,
-                  ),
-                  label: const Row(
-                    children: [
-                      Icon(Icons.person_outline),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text(
-                        'Enter your full name',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: const BorderSide(
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-              ),
+              CustomTextFormField(
+                  label: 'FullName',
+                  placeholderText: 'Enter your Full Name',
+                  placeholderIcon: Icons.person_outline,
+                  onSave: _saveInput,
+                  onValidation: _validateInput),
               const SizedBox(
                 height: 16,
               ),
-              Text(
-                'Email',
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(
-                height: 6,
-              ),
-              TextFormField(
-                autocorrect: false,
-                onSaved: (value) {
-                  _email = value!;
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'This field is required.';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 12,
-                  ),
-                  label: const Row(
-                    children: [
-                      Icon(Icons.mail_outline),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text(
-                        'Enter your email address',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: const BorderSide(
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-              ),
+              CustomTextFormField(
+                  label: 'Email',
+                  placeholderText: 'Enter your email address',
+                  placeholderIcon: Icons.mail_outline,
+                  onSave: _saveInput,
+                  onValidation: _validateInput),
               const SizedBox(
                 height: 16,
               ),
-              Text(
-                'Student ID',
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(
-                height: 6,
-              ),
-              TextFormField(
-                autocorrect: false,
-                onSaved: (value) {
-                  _studentId = value!;
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'This field is required.';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 12,
-                  ),
-                  label: const Row(
-                    children: [
-                      Icon(Icons.document_scanner_outlined),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text(
-                        'Enter your student ID',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: const BorderSide(
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-              ),
+              CustomTextFormField(
+                  label: 'Student Id',
+                  placeholderText: 'Enter your student ID',
+                  placeholderIcon: Icons.document_scanner_outlined,
+                  onSave: _saveInput,
+                  onValidation: _validateInput),
               const SizedBox(
                 height: 16,
               ),
-              Text(
-                'Password',
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(
-                height: 6,
-              ),
-              TextFormField(
-                obscureText: true,
-                enableSuggestions: false,
-                autocorrect: false,
-                onChanged: (value) {
-                  _password = value;
-                },
-                onSaved: (value) {
-                  _password = value!;
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'This field is required.';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 12,
-                  ),
-                  label: const Row(
-                    children: [
-                      Icon(Icons.key),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text(
-                        'Enter your password',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: const BorderSide(
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-              ),
+              CustomTextFormField(
+                  label: 'Passowrd',
+                  placeholderText: 'Enter password',
+                  placeholderIcon: Icons.key_outlined,
+                  onSave: _saveInput,
+                  onValidation: _validateInput),
               const SizedBox(
                 height: 16,
               ),
-              Text(
-                'Confirm Password',
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(
-                height: 6,
-              ),
-              TextFormField(
-                obscureText: true,
-                enableSuggestions: false,
-                autocorrect: false,
-                onSaved: (value) {
-                  _confirmPassword = value!;
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'This field is required.';
-                  }
-                  if (value != _password) {
-                    return 'Password doesn\'t match or Password is too small (min 6 char)';
-                  }
-                  if (_password.length < 6) {
-                    return 'Password is too small (min 6 char)';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 12,
-                  ),
-                  label: const Row(
-                    children: [
-                      Icon(Icons.key),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text(
-                        'Re-enter your password',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: const BorderSide(
-                      width: 1.0,
-                    ),
-                  ),
-                ),
+              CustomTextFormField(
+                label: 'Confirm Password',
+                placeholderText: 'Re-enter password',
+                placeholderIcon: Icons.key_outlined,
+                onSave: _matchPassword,
+                onValidation: _validateInput,
               ),
               const SizedBox(
                 height: 36,
