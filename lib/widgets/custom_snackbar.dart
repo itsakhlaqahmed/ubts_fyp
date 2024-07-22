@@ -5,7 +5,7 @@ enum CustomSnackbar {
   error,
 }
 
-class SnackBarBuilder {
+class CustomSnackBarBuilder {
   final Color kSuccessColor = const Color.fromARGB(255, 103, 194, 58);
   final Color kErrorColor = const Color.fromARGB(255, 245, 108, 108);
 

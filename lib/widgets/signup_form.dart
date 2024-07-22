@@ -1,7 +1,19 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:ubts_fyp/pages/login.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
+import 'package:ubts_fyp/widgets/custom_snackbar.dart';
 import 'package:ubts_fyp/widgets/text_field.dart';
+
+// AIzaSyCUccOgqZ2hXFluNq5lQMDolyt7wWFiDfs
+
+enum User {
+  fullName,
+  email,
+  studentId,
+  password,
+  // confirmPassword, kinda extra field
+}
 
 class SignupForm extends StatefulWidget {
   const SignupForm({
@@ -17,14 +29,13 @@ class SignupForm extends StatefulWidget {
 
 class _SignupFormState extends State<SignupForm> {
   final _formKey = GlobalKey<FormState>();
+  Map<User, String?> _userData = {};
   String _fullName = '';
-  String _email = '';
+  String _email = 'a@gmail.com';
   String _studentId = '';
-  String _password = '';
-  String _confirmPassword = '';
+  String _password = '123456';
   bool _isLoading = false;
 
-  Map<String, String> formData = {};
 
   Future<void> _clickSignup() async {
     bool validated = _formKey.currentState!.validate();
@@ -47,19 +58,19 @@ class _SignupFormState extends State<SignupForm> {
         });
 
         if (user != null) {
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Account created successfully'),
-            ),
+          if (!mounted) return;
+          CustomSnackBarBuilder().showCustomSnackBar(
+            context,
+            snackBarType: CustomSnackbar.success,
+            text: 'Account created successfully...',
           );
         }
       } catch (err) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(err.toString()),
-          ),
+        if (!mounted) return;
+        CustomSnackBarBuilder().showCustomSnackBar(
+          context,
+          snackBarType: CustomSnackbar.error,
+          text: err.toString(),
         );
       }
 
@@ -77,8 +88,14 @@ class _SignupFormState extends State<SignupForm> {
     return null;
   }
 
-  void _saveInput(String? value) {}
-  String? _matchPassword(value) {
+  void _saveInput(
+    User identifier,
+    String? value,
+  ) {
+    _userData[identifier] = value!;
+  }
+
+  String? _matchPassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'This field is required.';
     }
@@ -88,6 +105,16 @@ class _SignupFormState extends State<SignupForm> {
     if (value != _password) {
       return 'Password doesn\'t match or Password is too small (min 6 char)';
     }
+    return null;
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'This field is required.';
+    }
+    // if (!EmailValidator.validate(value)) {
+    //   return 'Please enter a valid email';
+    // }
     return null;
   }
 
@@ -110,38 +137,51 @@ class _SignupFormState extends State<SignupForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomTextFormField(
-                  label: 'FullName',
-                  placeholderText: 'Enter your Full Name',
-                  placeholderIcon: Icons.person_outline,
-                  onSave: _saveInput,
-                  onValidation: _validateInput),
+                label: 'FullName',
+                placeholderText: 'Enter your Full Name',
+                placeholderIcon: Icons.person_outline,
+                onSave: (value) {
+                  _saveInput(User.fullName, value);
+                },
+                onValidation: _validateInput,
+              ),
               const SizedBox(
                 height: 16,
               ),
               CustomTextFormField(
-                  label: 'Email',
-                  placeholderText: 'Enter your email address',
-                  placeholderIcon: Icons.mail_outline,
-                  onSave: _saveInput,
-                  onValidation: _validateInput),
+                label: 'Email',
+                placeholderText: 'Enter your email address',
+                placeholderIcon: Icons.mail_outline,
+                onSave: (value) {
+                  _saveInput(User.email, value);
+                },
+                onValidation: _validateEmail,
+              ),
               const SizedBox(
                 height: 16,
               ),
               CustomTextFormField(
-                  label: 'Student Id',
-                  placeholderText: 'Enter your student ID',
-                  placeholderIcon: Icons.document_scanner_outlined,
-                  onSave: _saveInput,
-                  onValidation: _validateInput),
+                label: 'Student Id',
+                placeholderText: 'Enter your student ID',
+                placeholderIcon: Icons.document_scanner_outlined,
+                onSave: (value) {
+                  _saveInput(User.studentId, value);
+                },
+                onValidation: _validateInput,
+              ),
               const SizedBox(
                 height: 16,
               ),
               CustomTextFormField(
-                  label: 'Passowrd',
-                  placeholderText: 'Enter password',
-                  placeholderIcon: Icons.key_outlined,
-                  onSave: _saveInput,
-                  onValidation: _validateInput),
+                label: 'Password',
+                placeholderText: 'Enter password',
+                placeholderIcon: Icons.key_outlined,
+                hideText: true,
+                onSave: (value) {
+                  _saveInput(User.password, value);
+                },
+                onValidation: _validateInput,
+              ),
               const SizedBox(
                 height: 16,
               ),
@@ -149,8 +189,11 @@ class _SignupFormState extends State<SignupForm> {
                 label: 'Confirm Password',
                 placeholderText: 'Re-enter password',
                 placeholderIcon: Icons.key_outlined,
-                onSave: _matchPassword,
-                onValidation: _validateInput,
+                hideText: true,
+                onSave: (value) {
+                  // _saveInput(User.confirmPassword, value); extra field
+                },
+                onValidation: _matchPassword,
               ),
               const SizedBox(
                 height: 36,

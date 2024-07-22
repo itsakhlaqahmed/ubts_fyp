@@ -85,6 +85,7 @@ class _OnboardingState extends State<Onboarding> {
       itemCount: 3,
       itemBuilder: (BuildContext ctx, index) {
         return OnboardingScreen(
+          key: ValueKey(index),
           data: screenData[index],
           activePageIndex: _activePageIndex,
           totalScreens: screenData.length,

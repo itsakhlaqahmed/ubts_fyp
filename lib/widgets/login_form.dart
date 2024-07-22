@@ -48,7 +48,7 @@ class _LoginFormState extends State<LoginForm> {
       
 
       if (!mounted) return;
-      SnackBarBuilder().showCustomSnackBar(
+      CustomSnackBarBuilder().showCustomSnackBar(
         context,
         snackBarType: CustomSnackbar.success,
         text: 'You have been logged in successfully',
@@ -60,7 +60,7 @@ class _LoginFormState extends State<LoginForm> {
       );
     } catch (err) {
       if (!mounted) return;
-      SnackBarBuilder().showCustomSnackBar(
+      CustomSnackBarBuilder().showCustomSnackBar(
         context,
         snackBarType: CustomSnackbar.error,
         text: err.toString(),
