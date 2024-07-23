@@ -19,7 +19,7 @@ class _SignupPageState extends State<SignupPage> {
   int activeFormIndex = 0;
   String? _userId;
 
-  var busStops = [
+  var busStops = const [
     BusStop(from: 'Baldia Town', to: 'Steel Town'),
     BusStop(from: 'Baldia Town', to: 'Steel Town'),
     BusStop(from: 'Baldia Town', to: 'Steel Town'),
@@ -61,26 +61,30 @@ class _SignupPageState extends State<SignupPage> {
 
   // Future<void> _saveUserData() async {}
 
-  // Future<void> _createUserWithEmailAndPassword(
-  //     String email, String password) async {
-  //   try {
-  //     await AuthService().createUserWithEmailAndPassword(
-  //       email: email,
-  //       password: password,
-  //     );
-  //     _userId = AuthService().currentUser?.uid;
-  //   } catch (err) {
-  //     if (!mounted) return;
-  //     ScaffoldMessenger.of(context).clearSnackBars();
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text(
-  //           err.toString(),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
+  Future<void> _createUserWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      await AuthService().createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      _userId = AuthService().currentUser?.uid;
+    } catch (err) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            err.toString(),
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _saveUserData() async {
+    
+  }
 
   @override
   Widget build(BuildContext context) {
