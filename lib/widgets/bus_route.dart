@@ -29,10 +29,10 @@ class _BusRoutePanelState extends State<BusRoutePanel> {
     return Animate(
       effects: const [
         SlideEffect(
-          duration: Duration(milliseconds: 300),
+          duration: Duration(milliseconds: 200),
           begin: Offset(3, 0),
           curve: Curves.easeOutCubic,
-        )
+        ),
       ],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

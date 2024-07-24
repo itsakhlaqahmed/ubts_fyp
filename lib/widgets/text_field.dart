@@ -6,9 +6,10 @@ class CustomTextFormField extends StatelessWidget {
     required this.label,
     required this.placeholderText,
     required this.placeholderIcon,
-    this.hideText,
     required this.onSave,
     required this.onValidation,
+    this.hideText,
+    this.onChanged,
   });
 
   final String label;
@@ -16,6 +17,7 @@ class CustomTextFormField extends StatelessWidget {
   final IconData placeholderIcon;
   final bool? hideText;
   final void Function(String?) onSave;
+  final void Function(String?)? onChanged;
   final String? Function(String?) onValidation;
 
   @override
@@ -38,6 +40,7 @@ class CustomTextFormField extends StatelessWidget {
           keyboardType: TextInputType.visiblePassword,
           onSaved: onSave,
           validator: onValidation,
+          onChanged: onChanged,
           decoration: InputDecoration(
             label: Row(
               children: [

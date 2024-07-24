@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ubts_fyp/models/user.dart';
 import 'package:ubts_fyp/widgets/bus_route.dart';
 import 'package:ubts_fyp/widgets/bus_stop.dart';
 import 'package:ubts_fyp/widgets/signup_form.dart';
@@ -26,15 +27,14 @@ class _SignupPageState extends State<SignupPage> {
     BusStop(from: 'Baldia Town', to: 'Steel Town'),
   ];
 
-  void _clickSignup(Map<String, String> formData) async {
+  void _clickSignup(Map<User, String> formData) async {
     signupData = {
-      ...formData,
+      // ...formData,
     };
 
     setState(() {
       activeFormIndex = 1;
     });
-
   }
 
   void _selectRoute(String route) {
@@ -53,7 +53,7 @@ class _SignupPageState extends State<SignupPage> {
       'busStop': busStop,
     };
     setState(() {
-      activeFormIndex = 3;
+      // activeFormIndex = 3;
     });
 
     // _saveUserData();
@@ -82,8 +82,11 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
-  Future<void> _saveUserData() async {
-    
+  Future<void> saveUserData() async {
+    FirestoreService().addUserData(
+      id: 'id',
+      userData: signupData,
+    );
   }
 
   @override
@@ -110,15 +113,17 @@ class _SignupPageState extends State<SignupPage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              setState(() {
-                if (activeFormIndex > 0) {
-                  activeFormIndex -= 1;
-                }
-              });
-            },
-            icon: const Icon(Icons.arrow_back)),
+        leading: activeFormIndex == 0
+            ? null
+            : IconButton(
+                onPressed: () {
+                  setState(() {
+                    if (activeFormIndex > 0) {
+                      activeFormIndex -= 1;
+                    }
+                  });
+                },
+                icon: const Icon(Icons.arrow_back)),
         title: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Text(

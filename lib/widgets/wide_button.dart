@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 class WideButton extends StatelessWidget {
   const WideButton({
     super.key,
-    required this.isLoading,
+    this.isLoading,
     required this.onSubmitForm,
     required this.buttonText,
   });
 
   final String buttonText;
-  final bool isLoading;
+  final bool? isLoading;
   final Function onSubmitForm;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        isLoading ? null : onSubmitForm();
+        isLoading ?? false ? null : onSubmitForm();
       },
       child: Container(
         width: double.infinity,
@@ -26,7 +26,7 @@ class WideButton extends StatelessWidget {
           color: const Color.fromARGB(255, 117, 75, 243),
         ),
         child: Center(
-          child: isLoading
+          child: isLoading ?? false
               ? const SizedBox(
                   height: 40,
                   width: 40,
@@ -38,6 +38,7 @@ class WideButton extends StatelessWidget {
                   buttonText,
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         color: Colors.white,
+                        fontSize: 18,
                       ),
                 ),
         ),
