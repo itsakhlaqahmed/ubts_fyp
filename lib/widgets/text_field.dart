@@ -35,6 +35,9 @@ class CustomTextFormField extends StatelessWidget {
           height: 6,
         ),
         TextFormField(
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
           obscureText: hideText ?? false,
           autocorrect: false,
           keyboardType: TextInputType.visiblePassword,

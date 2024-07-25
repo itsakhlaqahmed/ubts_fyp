@@ -28,41 +28,41 @@ class _SignupFormState extends State<SignupForm> {
   bool _isLoading = false;
 
   Future<void> _clickSignup() async {
-    // bool validated = _formKey.currentState!.validate();
-    // if (validated) {
-    //   _formKey.currentState!.save();
-    //   try {
-    //     setState(() {
-    //       _isLoading = true;
-    //     });
-    //     final user = await AuthService().createUserWithEmailAndPassword(
-    //       email: _userData[User.email]!,
-    //       password: _userData[User.password]!,
-    //     );
+    bool validated = _formKey.currentState!.validate();
+    if (validated) {
+      _formKey.currentState!.save();
+      try {
+        setState(() {
+          _isLoading = true;
+        });
+        final user = await AuthService().createUserWithEmailAndPassword(
+          email: _userData[User.email]!,
+          password: _userData[User.password]!,
+        );
 
     widget.onClickSignup(_userData);
 
-    //     if (user != null) {
-    //       if (!mounted) return;
-    //       CustomSnackBarBuilder().showCustomSnackBar(
-    //         context,
-    //         snackBarType: CustomSnackbar.success,
-    //         text: 'Account created successfully...',
-    //       );
-    //     }
-    //   } catch (err) {
-    //     if (!mounted) return;
-    //     CustomSnackBarBuilder().showCustomSnackBar(
-    //       context,
-    //       snackBarType: CustomSnackbar.error,
-    //       text: err.toString(),
-    //     );
-    //   }
+        if (user != null) {
+          if (!mounted) return;
+          CustomSnackBarBuilder().showCustomSnackBar(
+            context,
+            snackBarType: CustomSnackbar.success,
+            text: 'Account created successfully...',
+          );
+        }
+      } catch (err) {
+        if (!mounted) return;
+        CustomSnackBarBuilder().showCustomSnackBar(
+          context,
+          snackBarType: CustomSnackbar.error,
+          text: err.toString(),
+        );
+      }
 
-    //   setState(() {
-    //     _isLoading = false;
-    //   });
-    // }
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   String? _validateInput(String? value) {
@@ -112,12 +112,11 @@ class _SignupFormState extends State<SignupForm> {
   Widget build(BuildContext context) {
     return Animate(
       effects: const [
-        FadeEffect(duration: Durations.short3),
         ScaleEffect(
-            duration: Durations.short4,
+            duration: Durations.medium2,
             alignment: Alignment.center,
             curve: Curves.easeOutCubic,
-            begin: Offset(.5, .5)),
+            begin: Offset(0, 0)),
       ],
       child: Column(
         children: [

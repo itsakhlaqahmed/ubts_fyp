@@ -10,11 +10,13 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    await Firebase.initializeApp(
+    var a = await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+    print("*************************************************8" + a.toString());
   } catch (e) {
     // handle erro
+    print('error');
   }
   runApp(const MainApp());
 }

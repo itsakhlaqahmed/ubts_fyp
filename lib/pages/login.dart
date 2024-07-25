@@ -26,12 +26,11 @@ class LoginPage extends StatelessWidget {
       ),
       body: Animate(
         effects: const [
-          FadeEffect(duration: Durations.short3),
           ScaleEffect(
-              duration: Durations.short4,
+              duration: Duration(milliseconds: 300),
               alignment: Alignment.center,
               curve: Curves.easeOutCubic,
-              begin: Offset(.5, .5)),
+              begin: Offset(0, 0)),
         ],
         child: SafeArea(
           child: Padding(

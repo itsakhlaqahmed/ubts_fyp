@@ -1,7 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:ubts_fyp/firebase_options.dart';
 import 'package:ubts_fyp/models/user.dart';
 import 'package:ubts_fyp/widgets/bus_route.dart';
 import 'package:ubts_fyp/widgets/bus_stop.dart';
+import 'package:ubts_fyp/widgets/custom_snackbar.dart';
 import 'package:ubts_fyp/widgets/signup_form.dart';
 import 'package:ubts_fyp/models/bus_stop.dart';
 import 'package:ubts_fyp/models/bus_route.dart';
@@ -16,20 +19,20 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  Map<String, String> signupData = {};
+  Map<User, String> signUpData = {};
   int activeFormIndex = 0;
   String? _userId;
 
   var busStops = const [
     BusStop(from: 'Baldia Town', to: 'Steel Town'),
-    BusStop(from: 'Baldia Town', to: 'Steel Town'),
-    BusStop(from: 'Baldia Town', to: 'Steel Town'),
-    BusStop(from: 'Baldia Town', to: 'Steel Town'),
+    BusStop(from: 'Korangi ', to: 'Landhi'),
+    BusStop(from: 'Saddar Town', to: 'Nazimabad'),
+    BusStop(from: 'Baldia Town', to: 'Steel'),
   ];
 
   void _clickSignup(Map<User, String> formData) async {
-    signupData = {
-      // ...formData,
+    signUpData = {
+      ...formData,
     };
 
     setState(() {
@@ -38,9 +41,9 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void _selectRoute(String route) {
-    signupData = {
-      ...signupData,
-      'route': route,
+    signUpData = {
+      ...signUpData,
+      User.busRoute: route,
     };
     setState(() {
       activeFormIndex = 2;
@@ -48,45 +51,47 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void _selectStop(String busStop) {
-    signupData = {
-      ...signupData,
-      'busStop': busStop,
+    signUpData = {
+      ...signUpData,
+      User.busStop: busStop,
     };
-    setState(() {
-      // activeFormIndex = 3;
-    });
 
-    // _saveUserData();
+    _saveUserData();
   }
 
-  // Future<void> _saveUserData() async {}
-
-  Future<void> _createUserWithEmailAndPassword(
-      String email, String password) async {
-    try {
-      await AuthService().createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      _userId = AuthService().currentUser?.uid;
-    } catch (err) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            err.toString(),
-          ),
+  Future<void> _saveUserData() async {
+    Map<String, dynamic> data = Map.fromEntries(
+      signUpData.entries.map(
+        (key) => MapEntry(
+          key.toString(),
+          key.value,
         ),
+      ),
+    );
+
+    try {
+    //   await Firebase.initializeApp(
+    //   options: DefaultFirebaseOptions.currentPlatform,
+    // );
+      FirestoreService().addUserData(
+        id: 'id2',
+        userData: data,
+      );
+      CustomSnackBarBuilder().showCustomSnackBar(
+        context,
+        snackBarType: CustomSnackbar.success,
+        text: 'Success',
+      );
+  var a = await FirestoreService().getUserData(
+        userId: 'id2',
+      );
+    } catch (err) {
+      CustomSnackBarBuilder().showCustomSnackBar(
+        context,
+        snackBarType: CustomSnackbar.error,
+        text: err.toString(),
       );
     }
-  }
-
-  Future<void> saveUserData() async {
-    FirestoreService().addUserData(
-      id: 'id',
-      userData: signupData,
-    );
   }
 
   @override
