@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ubts_fyp/models/user.dart';
 import 'package:ubts_fyp/pages/login.dart';
-import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/widgets/custom_snackbar.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:ubts_fyp/widgets/text_field.dart';
@@ -16,7 +15,7 @@ class SignupForm extends StatefulWidget {
     required this.onClickSignup,
   });
 
-  final Function(Map<User, String> formData) onClickSignup;
+  final Future<bool?> Function(Map<User, String> formData) onClickSignup;
 
   @override
   State<StatefulWidget> createState() => _SignupFormState();
@@ -35,12 +34,8 @@ class _SignupFormState extends State<SignupForm> {
         setState(() {
           _isLoading = true;
         });
-        final user = await AuthService().createUserWithEmailAndPassword(
-          email: _userData[User.email]!,
-          password: _userData[User.password]!,
-        );
 
-    widget.onClickSignup(_userData);
+        bool? user = await widget.onClickSignup(_userData);
 
         if (user != null) {
           if (!mounted) return;

@@ -13,11 +13,10 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
- 
-
   int _activePageIndex = 0;
   late PageController _pagecontroller;
-  
+  final Future<SharedPreferences> _sharedPreferences =
+      SharedPreferences.getInstance();
 
   @override
   void initState() {
@@ -34,19 +33,20 @@ class _OnboardingState extends State<Onboarding> {
   }
 
   Future<void> checkFirstVisit() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _sharedPreferences;
     bool hasVisited = prefs.getBool('hasVisited') ?? false;
 
     if (hasVisited) {
       navigateToLogin();
       return;
     }
-
-    prefs.setBool('hasVisited', true);
   }
 
-  void nextPage() {
+  void nextPage() async {
     if (_activePageIndex >= screenData.length - 1) {
+      final prefs = await _sharedPreferences;
+      prefs.setBool('hasVisited', true);
+
       navigateToSignup();
     }
 
@@ -64,7 +64,7 @@ class _OnboardingState extends State<Onboarding> {
     );
   }
 
-    void navigateToSignup() {
+  void navigateToSignup() {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => const SignupPage(),

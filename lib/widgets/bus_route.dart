@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:ubts_fyp/widgets/wide_button.dart';
 
 class BusRoutePanel extends StatefulWidget {
   const BusRoutePanel({
@@ -23,6 +24,16 @@ class _BusRoutePanelState extends State<BusRoutePanel> {
 
   String? _selectedRoute;
   bool _error = false;
+
+  void _nextPage() {
+    if (_selectedRoute != null) {
+      widget.onSelectRoute(_selectedRoute!);
+    } else {
+      setState(() {
+        _error = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,32 +105,9 @@ class _BusRoutePanelState extends State<BusRoutePanel> {
           const SizedBox(
             height: 24,
           ),
-          InkWell(
-            onTap: () {
-              if (_selectedRoute != null) {
-                widget.onSelectRoute(_selectedRoute!);
-              } else {
-                setState(() {
-                  _error = true;
-                });
-              }
-            },
-            child: Container(
-              width: double.infinity,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: const Color.fromARGB(255, 117, 75, 243),
-              ),
-              child: Center(
-                child: Text(
-                  'Next',
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: Colors.white,
-                      ),
-                ),
-              ),
-            ),
+          WideButton(
+            onSubmitForm: _nextPage,
+            buttonText: 'Next',
           ),
           const SizedBox(
             height: 8,

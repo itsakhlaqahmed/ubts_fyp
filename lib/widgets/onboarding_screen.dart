@@ -92,7 +92,7 @@ class OnboardingScreen extends StatelessWidget {
                             width: 48,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(32),
-                              color:  Color.fromARGB(255, 247, 161, 133),
+                              color:  const Color.fromARGB(255, 253, 129, 59),
                             ),
                             child: const Icon(
                               Icons.arrow_forward_ios_rounded,

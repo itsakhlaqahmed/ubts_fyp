@@ -1,14 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubts_fyp/firebase_options.dart';
 import 'package:ubts_fyp/models/user.dart';
+import 'package:ubts_fyp/pages/success.dart';
+import 'package:ubts_fyp/services/auth_service.dart';
+import 'package:ubts_fyp/services/persistant_storage.dart';
 import 'package:ubts_fyp/widgets/bus_route.dart';
 import 'package:ubts_fyp/widgets/bus_stop.dart';
 import 'package:ubts_fyp/widgets/custom_snackbar.dart';
 import 'package:ubts_fyp/widgets/signup_form.dart';
 import 'package:ubts_fyp/models/bus_stop.dart';
-import 'package:ubts_fyp/models/bus_route.dart';
-import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/firestore_service.dart';
 
 class SignupPage extends StatefulWidget {
@@ -21,7 +24,6 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   Map<User, String> signUpData = {};
   int activeFormIndex = 0;
-  String? _userId;
 
   var busStops = const [
     BusStop(from: 'Baldia Town', to: 'Steel Town'),
@@ -30,33 +32,62 @@ class _SignupPageState extends State<SignupPage> {
     BusStop(from: 'Baldia Town', to: 'Steel'),
   ];
 
-  void _clickSignup(Map<User, String> formData) async {
+  Future<bool?> _clickCreateAccount(Map<User, String> formData) async {
     signUpData = {
       ...formData,
     };
 
-    setState(() {
-      activeFormIndex = 1;
-    });
+    final user = await AuthService().createUserWithEmailAndPassword(
+      email: formData[User.email]!,
+      password: formData[User.password]!,
+    );
+    signUpData.remove(User.password);
+
+    if (user != null) {
+      signUpData[User.userId] = user.uid;
+
+      setState(() {
+        activeFormIndex = 1;
+      });
+      return true;
+    }
+
+    return null;
   }
 
   void _selectRoute(String route) {
-    signUpData = {
-      ...signUpData,
-      User.busRoute: route,
-    };
+    signUpData[User.busRoute] = route;
     setState(() {
       activeFormIndex = 2;
     });
   }
 
   void _selectStop(String busStop) {
-    signUpData = {
-      ...signUpData,
-      User.busStop: busStop,
-    };
+    signUpData[User.busStop] = busStop;
 
-    _saveUserData();
+    try {
+      _saveUserData();
+      if (!mounted) return;
+      CustomSnackBarBuilder().showCustomSnackBar(
+        context,
+        snackBarType: CustomSnackbar.success,
+        text: 'Success',
+      );
+
+      PersistantStorage().persistUserData(signUpData);
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (ctx) => const SuccessPage(),
+        ),
+      );
+    } catch (err) {
+      CustomSnackBarBuilder().showCustomSnackBar(
+        context,
+        snackBarType: CustomSnackbar.error,
+        text: err.toString(),
+      );
+    }
   }
 
   Future<void> _saveUserData() async {
@@ -69,35 +100,18 @@ class _SignupPageState extends State<SignupPage> {
       ),
     );
 
-    try {
-    //   await Firebase.initializeApp(
-    //   options: DefaultFirebaseOptions.currentPlatform,
-    // );
-      FirestoreService().addUserData(
-        id: 'id2',
-        userData: data,
-      );
-      CustomSnackBarBuilder().showCustomSnackBar(
-        context,
-        snackBarType: CustomSnackbar.success,
-        text: 'Success',
-      );
-  var a = await FirestoreService().getUserData(
-        userId: 'id2',
-      );
-    } catch (err) {
-      CustomSnackBarBuilder().showCustomSnackBar(
-        context,
-        snackBarType: CustomSnackbar.error,
-        text: err.toString(),
-      );
-    }
+    await FirestoreService().addUserData(
+      id: signUpData[User.userId]!,
+      userData: data,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    print(User.busRoute.toString());
+
     Widget content = SignupForm(
-      onClickSignup: _clickSignup,
+      onClickSignup: _clickCreateAccount,
     );
 
     switch (activeFormIndex) {

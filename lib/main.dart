@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:ubts_fyp/pages/home.dart';
 import 'package:ubts_fyp/pages/login.dart';
 import 'package:ubts_fyp/pages/onboarding.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:ubts_fyp/pages/success.dart';
 import 'package:ubts_fyp/widgets/animation_example.dart';
 import 'firebase_options.dart';
 
@@ -13,7 +16,7 @@ Future<void> main() async {
     var a = await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    print("*************************************************8" + a.toString());
+    print("**********" + a.toString());
   } catch (e) {
     // handle erro
     print('error');
@@ -21,7 +24,9 @@ Future<void> main() async {
   runApp(const MainApp());
 }
 
-var lightTheme = ThemeData.light().colorScheme.copyWith();
+var lightTheme = ThemeData.light().colorScheme.copyWith(
+  primary: const Color.fromARGB(255, 253, 129, 59),
+);
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -30,9 +35,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Onboarding(),
-      // home: AnimationExample(),
+    return  MaterialApp(
+      theme: ThemeData(textTheme: GoogleFonts.getTextTheme('Poppins')),
+      home: const Onboarding(),
+      // home: Home(),
     );
   }
 }
