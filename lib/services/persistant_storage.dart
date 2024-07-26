@@ -7,6 +7,7 @@ class PersistantStorage {
 
   Future<void> persistUserData(Map<User, String> data) async {
     final SharedPreferences localStorage = await _sharedPreferences;
+
     await localStorage.setStringList('user', [
       data[User.userId]!,
       data[User.fullName]!,

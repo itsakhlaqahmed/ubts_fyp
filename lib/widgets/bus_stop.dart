@@ -35,10 +35,28 @@ class _BusStopPanelState extends State<BusStopPanel> {
             const SizedBox(
               height: 36,
             ),
-            const Text('Select Your Bus Route'),
+            const Text(
+              'Select Your Bus Route',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(
               height: 24,
             ),
+            _error
+                ? const Center(
+                    child: Text(
+                      'Kindly select a bus route',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )
+                : const SizedBox.shrink(),
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,

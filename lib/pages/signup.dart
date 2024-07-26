@@ -1,8 +1,4 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ubts_fyp/firebase_options.dart';
 import 'package:ubts_fyp/models/user.dart';
 import 'package:ubts_fyp/pages/success.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
@@ -35,6 +31,7 @@ class _SignupPageState extends State<SignupPage> {
   Future<bool?> _clickCreateAccount(Map<User, String> formData) async {
     signUpData = {
       ...formData,
+      User.isApproved: 'false',
     };
 
     final user = await AuthService().createUserWithEmailAndPassword(
@@ -62,7 +59,7 @@ class _SignupPageState extends State<SignupPage> {
     });
   }
 
-  void _selectStop(String busStop) {
+  void _selectStop(String busStop) async {
     signUpData[User.busStop] = busStop;
 
     try {
@@ -74,8 +71,9 @@ class _SignupPageState extends State<SignupPage> {
         text: 'Success',
       );
 
-      PersistantStorage().persistUserData(signUpData);
+      await PersistantStorage().persistUserData(signUpData);
 
+      if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (ctx) => const SuccessPage(),
