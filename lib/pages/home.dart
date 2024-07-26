@@ -22,6 +22,21 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    String fullName = 'Nigha';
+    String studentId = 'BSE-21S-059';
+
+    Widget content = Column(
+      children: [
+        Text(
+          fullName,
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+      ],
+    );
+
     return Scaffold(
       body: Center(
         child: FutureBuilder(

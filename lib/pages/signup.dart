@@ -38,6 +38,8 @@ class _SignupPageState extends State<SignupPage> {
       email: formData[User.email]!,
       password: formData[User.password]!,
     );
+
+    
     signUpData.remove(User.password);
 
     if (user != null) {

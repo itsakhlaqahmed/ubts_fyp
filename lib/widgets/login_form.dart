@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ubts_fyp/pages/home.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
@@ -40,7 +41,7 @@ class _LoginFormState extends State<LoginForm> {
       setState(() {
         _isLoading = true;
       });
-      await AuthService().signInWithEmailAnsPassword(
+      User? user = await AuthService().signInWithEmailAndPassword(
         email: _userName,
         password: _password,
       );

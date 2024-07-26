@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomTextFormField extends StatelessWidget {
+class CustomTextFormField extends StatefulWidget {
   const CustomTextFormField({
     super.key,
     required this.label,
@@ -21,12 +21,19 @@ class CustomTextFormField extends StatelessWidget {
   final String? Function(String?) onValidation;
 
   @override
+  State<CustomTextFormField> createState() => _CustomTextFormFieldState();
+}
+
+class _CustomTextFormFieldState extends State<CustomTextFormField> {
+  bool _isTextHidden = true;
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
+          widget.label,
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -35,23 +42,37 @@ class CustomTextFormField extends StatelessWidget {
           height: 6,
         ),
         TextFormField(
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
-          obscureText: hideText ?? false,
+          obscureText: widget.hideText == true ? _isTextHidden : false,
           autocorrect: false,
           keyboardType: TextInputType.visiblePassword,
-          onSaved: onSave,
-          validator: onValidation,
-          onChanged: onChanged,
+          onSaved: widget.onSave,
+          validator: widget.onValidation,
+          onChanged: widget.onChanged,
           decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            suffixIcon: widget.hideText ?? false
+                ? IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _isTextHidden = !_isTextHidden;
+                      });
+                      
+                    },
+                    icon: _isTextHidden
+                        ? const Icon(Icons.visibility_outlined)
+                        : const Icon(Icons.visibility_off_outlined),
+                  )
+                : null,
             label: Row(
               children: [
-                Icon(placeholderIcon),
+                Icon(widget.placeholderIcon),
                 const SizedBox(
                   width: 8,
                 ),
-                Text(placeholderText),
+                Text(widget.placeholderText),
               ],
             ),
             border: OutlineInputBorder(

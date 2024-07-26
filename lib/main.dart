@@ -35,8 +35,8 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  MaterialApp(
       theme: ThemeData(textTheme: GoogleFonts.getTextTheme('Poppins')),
-      home: const Onboarding(),
-      // home: Home(),
+      // home: const Onboarding(),
+      home: Home(),
     );
   }
 }
