@@ -41,7 +41,8 @@ class _LoginFormState extends State<LoginForm> {
       setState(() {
         _isLoading = true;
       });
-      User? user = await AuthService().signInWithEmailAndPassword(
+      User? user = 
+      await AuthService().signInWithEmailAndPassword(
         email: _userName,
         password: _password,
       );

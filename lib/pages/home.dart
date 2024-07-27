@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ubts_fyp/models/user.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
+import 'package:ubts_fyp/widgets/wide_button.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -25,20 +26,50 @@ class _HomeState extends State<Home> {
     String fullName = 'Nigha';
     String studentId = 'BSE-21S-059';
 
-    Widget content = Column(
-      children: [
-        Text(
-          fullName,
-          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-      ],
+    Widget content = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+           const SizedBox(
+            height: 24,
+          ),
+          Text(
+            fullName,
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(
+            height: 4,
+          ),
+          Text(
+            studentId,
+            style: const TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          const SizedBox(
+            height: 24,
+          ),
+          Container(
+            height: 500,
+            decoration: BoxDecoration(
+              color: Colors.grey[400],
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          WideButton(onSubmitForm: () {}, buttonText: 'Full Map')
+        ],
+      ),
     );
 
     return Scaffold(
-      body: Center(
+      body: SafeArea(
         child: FutureBuilder(
             future: _fetchData(),
             builder: (context, snapshot) {
@@ -54,7 +85,7 @@ class _HomeState extends State<Home> {
                 return Text(snapshot.data.toString());
               }
 
-              return const Text('No Data');
+              return content;
             }),
       ),
     );

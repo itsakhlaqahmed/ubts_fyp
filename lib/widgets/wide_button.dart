@@ -23,7 +23,7 @@ class WideButton extends StatelessWidget {
         height: 50,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: const Color.fromARGB(255, 117, 75, 243),
+          color: const Color.fromARGB(255, 253, 129, 59),
         ),
         child: Center(
           child: isLoading ?? false

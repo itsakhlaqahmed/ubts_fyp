@@ -40,7 +40,7 @@ class SuccessPage extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 253, 129, 59),
+                      color: const Color.fromARGB(255, 253, 129, 59),
                     ),
               ),
               const SizedBox(
