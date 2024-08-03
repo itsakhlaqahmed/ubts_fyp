@@ -23,7 +23,7 @@ Future<void> main() async {
 }
 
 var lightTheme = ThemeData.light().colorScheme.copyWith(
-  primary: const Color.fromARGB(255, 253, 129, 59),
+  primary: Color(0xFFFD813B),
 );
 
 class MainApp extends StatelessWidget {
@@ -35,8 +35,8 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  MaterialApp(
       theme: ThemeData(textTheme: GoogleFonts.getTextTheme('Poppins')),
-      // home: const Onboarding(),
-      home: Home(),
+      home: const Onboarding(),
+      // home: Home(),
     );
   }
 }

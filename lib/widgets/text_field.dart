@@ -47,7 +47,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           ),
           obscureText: widget.hideText == true ? _isTextHidden : false,
           autocorrect: false,
-          keyboardType: TextInputType.visiblePassword,
+          // keyboardType: TextInputType.visiblePassword,
           onSaved: widget.onSave,
           validator: widget.onValidation,
           onChanged: widget.onChanged,
