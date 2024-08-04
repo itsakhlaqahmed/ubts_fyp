@@ -8,7 +8,7 @@ import 'package:ubts_fyp/widgets/bus_stop.dart';
 import 'package:ubts_fyp/widgets/custom_snackbar.dart';
 import 'package:ubts_fyp/widgets/signup_form.dart';
 import 'package:ubts_fyp/models/bus_stop.dart';
-import 'package:ubts_fyp/services/firestore_service.dart';
+import 'package:ubts_fyp/services/user_db.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
