@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ubts_fyp/services/map_location_service.dart';
@@ -16,6 +17,7 @@ class HomeMapCard extends StatefulWidget {
 class _HomeMapCardState extends State<HomeMapCard> {
   final MapLocationService _mapLocationService = MapLocationService();
   bool rideStarted = false;
+  String _routeName = 'Gulshan e Hadeed';
   LatLng? _currentLocation;
   String? _address;
 
@@ -56,22 +58,15 @@ class _HomeMapCardState extends State<HomeMapCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(8),
-      ),
+      // decoration: BoxDecoration(
+      //   color: Colors.orange[200],
+      // ),
       child: _currentLocation != null
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  height: 200,
-                  clipBehavior: Clip.hardEdge,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    
-                  ),
+                SizedBox(
+                  height: 300,
                   child: GoogleMap(
                     mapToolbarEnabled: false,
                     liteModeEnabled: true,
@@ -87,13 +82,25 @@ class _HomeMapCardState extends State<HomeMapCard> {
                     },
                   ),
                 ),
-                const SizedBox(
-                  height: 6,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.orange[50],
+                  ),
+                  padding: const EdgeInsets.all(24.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(
+                        _routeName,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
                       Row(
                         children: [
                           const Text(
@@ -104,7 +111,7 @@ class _HomeMapCardState extends State<HomeMapCard> {
                             ),
                           ),
                           Text(
-                            rideStarted ? 'on Route' : 'Not yet started',
+                            rideStarted ? 'on Route' : 'Not started',
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -116,27 +123,32 @@ class _HomeMapCardState extends State<HomeMapCard> {
                         height: 4,
                       ),
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Address: ',
+                            'Current Location: ',
+                            maxLines: 3,
+                            softWrap: true,
                             style: TextStyle(
                               fontSize: 14,
                               // fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
-                            _address ?? 'null',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                          Flexible(
+                            child: Text(
+                              'Near $_address' ?? 'null',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 12,
+                      const SizedBox(
+                        height: 24,
                       ),
-                      WideButton(onSubmitForm: () {}, buttonText: 'Start')
+                      WideButton(onSubmitForm: () {}, buttonText: 'Full Map')
                     ],
                   ),
                 ),

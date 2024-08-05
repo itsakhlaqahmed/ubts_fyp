@@ -14,6 +14,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final AuthService _authService = AuthService();
+  String _busId = 'smiu-hadeed';
 
   // @override
   // initState() {
@@ -64,6 +65,7 @@ class _HomeState extends State<Home> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
@@ -94,10 +96,10 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     const SizedBox(
-                      height: 24,
+                      height: 8,
                     ),
-                    const HomeMapCard(
-                      busId: 'smiu-hadeed',
+                    HomeMapCard(
+                      busId: _busId,
                     ),
                   ],
                 );
