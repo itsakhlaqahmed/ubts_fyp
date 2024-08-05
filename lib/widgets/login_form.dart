@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ubts_fyp/models/user.dart';
 import 'package:ubts_fyp/pages/home.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
+import 'package:ubts_fyp/services/persistant_storage.dart';
+import 'package:ubts_fyp/services/user_db.dart';
 import 'package:ubts_fyp/widgets/custom_snackbar.dart';
 import 'package:ubts_fyp/widgets/text_field.dart';
 import 'package:ubts_fyp/widgets/wide_button.dart';
@@ -41,13 +44,25 @@ class _LoginFormState extends State<LoginForm> {
       setState(() {
         _isLoading = true;
       });
-      User? user = 
-      await AuthService().signInWithEmailAndPassword(
+      User? user = await AuthService().signInWithEmailAndPassword(
         email: _userName,
         password: _password,
       );
 
-      
+      if (user != null) {
+        FirestoreService().getUserData(userId: user.uid).then((response) async {
+          Map<UserData, String> userData = {
+            UserData.userId: user.uid,
+            UserData.fullName: response?["fullName"],
+            UserData.email: response?["email"],
+            UserData.isApproved: response?["isApproved"],
+            UserData.studentId: response?["studentId"],
+            UserData.busRoute: response?["busRoute"],
+            UserData.busStop: response?["studentId"],
+          };
+          await PersistantStorage().persistUserData(userData);
+        });
+      }
 
       if (!mounted) return;
       CustomSnackBarBuilder().showCustomSnackBar(
@@ -55,9 +70,9 @@ class _LoginFormState extends State<LoginForm> {
         snackBarType: CustomSnackbar.success,
         text: 'You have been logged in successfully',
       );
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => Home(),
+          builder: (context) => const Home(),
         ),
       );
     } catch (err) {
@@ -73,6 +88,8 @@ class _LoginFormState extends State<LoginForm> {
       _isLoading = false;
     });
   }
+
+  // ---------- form related functions ----------
 
   String? _validateInput(String? value) {
     if (value == null || value.isEmpty) {

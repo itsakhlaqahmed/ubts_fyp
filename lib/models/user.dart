@@ -1,4 +1,4 @@
-enum User {
+enum UserData {
   userId,
   fullName,
   email,

@@ -18,7 +18,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  Map<User, String> signUpData = {};
+  Map<UserData, String> signUpData = {};
   int activeFormIndex = 0;
 
   var busStops = const [
@@ -28,41 +28,42 @@ class _SignupPageState extends State<SignupPage> {
     BusStop(from: 'Baldia Town', to: 'Steel'),
   ];
 
-  Future<bool?> _clickCreateAccount(Map<User, String> formData) async {
+  Future<bool?> _clickCreateAccount(Map<UserData, String> formData) async {
     signUpData = {
       ...formData,
-      User.isApproved: 'false',
+      UserData.isApproved: 'false',
     };
 
     final user = await AuthService().createUserWithEmailAndPassword(
-      email: formData[User.email]!,
-      password: formData[User.password]!,
+      email: formData[UserData.email]!,
+      password: formData[UserData.password]!,
     );
-
     
-    signUpData.remove(User.password);
+
+    signUpData.remove(UserData.password);
 
     if (user != null) {
-      signUpData[User.userId] = user.uid;
+      signUpData[UserData.userId] = user.uid;
 
       setState(() {
         activeFormIndex = 1;
       });
       return true;
-    }
+    } 
 
     return null;
-  }
+  } // end _clickCreateAccount
+
 
   void _selectRoute(String route) {
-    signUpData[User.busRoute] = route;
+    signUpData[UserData.busRoute] = route;
     setState(() {
       activeFormIndex = 2;
     });
-  }
+  } // end _selectRoute
 
   void _selectStop(String busStop) async {
-    signUpData[User.busStop] = busStop;
+    signUpData[UserData.busStop] = busStop;
 
     try {
       _saveUserData();
@@ -88,27 +89,27 @@ class _SignupPageState extends State<SignupPage> {
         text: err.toString(),
       );
     }
-  }
+  } // end _selectStop
 
   Future<void> _saveUserData() async {
-    Map<String, dynamic> data = Map.fromEntries(
-      signUpData.entries.map(
-        (key) => MapEntry(
-          key.toString(),
-          key.value,
-        ),
-      ),
-    );
+    Map<String, dynamic> data = {
+      'fullName': signUpData[UserData.fullName],
+      'email': signUpData[UserData.email],
+      'studentId': signUpData[UserData.studentId],
+      'busRoute': signUpData[UserData.busRoute],
+      'busStop': signUpData[UserData.busStop],
+      'isApproved': 'false'
+    };
 
     await FirestoreService().addUserData(
-      id: signUpData[User.userId]!,
+      id: signUpData[UserData.userId]!,
       userData: data,
     );
-  }
+  } // end _saveUserData
 
   @override
   Widget build(BuildContext context) {
-    print(User.busRoute.toString());
+    print(UserData.busRoute.toString());
 
     Widget content = SignupForm(
       onClickSignup: _clickCreateAccount,

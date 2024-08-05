@@ -11,6 +11,8 @@ class FirestoreService {
     required String id,
     required Map<String, dynamic> userData,
   }) async {
+
+    // here user id of the auth account
     await _firestore.collection(_userCollection).doc(id).set(userData);
     // handle on success here
   }

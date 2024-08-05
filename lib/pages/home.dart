@@ -1,73 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:ubts_fyp/models/user.dart';
+import 'package:ubts_fyp/pages/login.dart';
+import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
-import 'package:ubts_fyp/widgets/wide_button.dart';
+import 'package:ubts_fyp/widgets/home_map_card.dart';
 
 class Home extends StatefulWidget {
+  const Home({super.key});
+
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  Map<User, String> userData = {};
+  final AuthService _authService = AuthService();
 
-  @override
-  initState() {
-    super.initState();
+  // @override
+  // initState() {
+  //   super.initState();
+  // }
+
+  Future<Map<UserData, String>?> _fetchData() async {
+    Map<UserData, String>? userData =
+        await PersistantStorage().fetchLocalData();
+
+    return userData;
   }
 
-  Future<Map<User, String>?> _fetchData() async {
-    Map<User, String>? userData = await PersistantStorage().fetchLocalData();
-    return userData;
+  void _signOut() async {
+    await _authService.signOut();
+
+    if (!mounted) return;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (ctx) => const LoginPage(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    String fullName = 'Nigha';
-    String studentId = 'BSE-21S-059';
-
-    Widget content = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-           const SizedBox(
-            height: 24,
-          ),
-          Text(
-            fullName,
-            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(
-            height: 4,
-          ),
-          Text(
-            studentId,
-            style: const TextStyle(
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(
-            height: 24,
-          ),
-          Container(
-            height: 500,
-            decoration: BoxDecoration(
-              color: Colors.grey[400],
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          WideButton(onSubmitForm: () {}, buttonText: 'Full Map')
-        ],
-      ),
-    );
-
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
@@ -78,14 +50,60 @@ class _HomeState extends State<Home> {
               }
 
               if (snapshot.hasError) {
-                return const Text('error');
+                return Text(snapshot.error.toString());
               }
 
               if (snapshot.hasData) {
-                return Text(snapshot.data.toString());
+                Map<UserData, String> userData = snapshot.data!;
+                return
+                    Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                userData[UserData.fullName] ?? 'null',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                              const Spacer(),
+                              IconButton(
+                                onPressed: _signOut,
+                                icon: const Icon(Icons.exit_to_app_outlined),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            userData[UserData.studentId] ?? 'null',
+                            style: const TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    const HomeMapCard(
+                      busId: 'smiu-hadeed',
+                    ),
+                  ],
+                );
               }
 
-              return content;
+              return const Text('loading');
             }),
       ),
     );

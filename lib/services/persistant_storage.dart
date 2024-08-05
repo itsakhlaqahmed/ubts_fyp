@@ -5,27 +5,33 @@ class PersistantStorage {
   final Future<SharedPreferences> _sharedPreferences =
       SharedPreferences.getInstance();
 
-  Future<void> persistUserData(Map<User, String> data) async {
+  Future<void> persistUserData(Map<UserData, String> data) async {
     final SharedPreferences localStorage = await _sharedPreferences;
 
     await localStorage.setStringList('user', [
-      data[User.userId]!,
-      data[User.fullName]!,
-      data[User.email]!,
-      data[User.isApproved]!,
+      data[UserData.userId]!,
+      data[UserData.fullName]!,
+      data[UserData.email]!,
+      data[UserData.studentId]!,
+      data[UserData.isApproved]!,
+      data[UserData.busRoute]!,
+      data[UserData.busStop]!,
     ]);
   }
 
-  Future<Map<User, String>?> fetchLocalData() async {
+  Future<Map<UserData, String>?> fetchLocalData() async {
     final SharedPreferences localStorage = await _sharedPreferences;
 
     List<String>? localData = localStorage.getStringList('user');
     if (localData != null) {
-      Map<User, String> userData = {
-        User.userId: localData[0],
-        User.fullName: localData[1],
-        User.email: localData[2],
-        User.isApproved: localData[3]
+      Map<UserData, String> userData = {
+        UserData.userId: localData[0],
+        UserData.fullName: localData[1],
+        UserData.email: localData[2],
+        UserData.studentId: localData[3],
+        UserData.isApproved: localData[4],
+        UserData.busRoute: localData[5],
+        UserData.busStop: localData[6],
       };
 
       return userData;

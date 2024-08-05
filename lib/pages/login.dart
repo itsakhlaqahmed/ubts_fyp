@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:ubts_fyp/pages/home.dart';
 import 'package:ubts_fyp/pages/signup.dart';
+import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/widgets/login_form.dart';
 
 class LoginPage extends StatelessWidget {
@@ -10,6 +13,27 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // var isAuth = AuthService().currentUser;
+
+    // if (isAuth != null) {
+    //   Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(
+    //       builder: (ctx) => const Home(),
+    //     ),
+    //   );
+    // }
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      var isAuth = AuthService().currentUser;
+
+      if (isAuth != null) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (ctx) => const Home(),
+          ),
+        );
+      }
+    });
     return Scaffold(
       appBar: AppBar(
         title: Padding(
@@ -37,55 +61,57 @@ class LoginPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
               horizontal: 16,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 72,
-                ),
-                Text(
-                  'Welcome Back!',
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                      ),
-                ),
-                const SizedBox(
-                  height: 6,
-                ),
-                Text(
-                  'Login to continue',
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        // fontSize: 20,
-                      ),
-                ),
-                const SizedBox(
-                  height: 72,
-                ),
-                LoginForm(
-                  onClickLogin: () {},
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const SignupPage(),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'Don\'t have an account? Create now!',
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: Colors.indigo,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 72,
+                  ),
+                  Text(
+                    'Welcome Back!',
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           fontWeight: FontWeight.bold,
+                          fontSize: 24,
                         ),
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  Text(
+                    'Login to continue',
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          // fontSize: 20,
+                        ),
+                  ),
+                  const SizedBox(
+                    height: 72,
+                  ),
+                  LoginForm(
+                    onClickLogin: () {},
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const SignupPage(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Don\'t have an account? Create now!',
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: Colors.indigo,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

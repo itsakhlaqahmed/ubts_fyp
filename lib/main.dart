@@ -5,6 +5,7 @@ import 'package:ubts_fyp/pages/home.dart';
 import 'package:ubts_fyp/pages/login.dart';
 import 'package:ubts_fyp/pages/onboarding.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:ubts_fyp/services/auth_service.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -23,8 +24,8 @@ Future<void> main() async {
 }
 
 var lightTheme = ThemeData.light().colorScheme.copyWith(
-  primary: Color(0xFFFD813B),
-);
+      primary: Color(0xFFFD813B),
+    );
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -33,10 +34,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       theme: ThemeData(textTheme: GoogleFonts.getTextTheme('Poppins')),
       home: const Onboarding(),
-      // home: Home(),
     );
   }
 }

@@ -15,19 +15,26 @@ class BusRoutePanel extends StatefulWidget {
 }
 
 class _BusRoutePanelState extends State<BusRoutePanel> {
-  final List<String> routes = [
-    'Gulshan e Hadeed',
-    'Baldia Town',
-    'North Nazimabad',
-    'Steel Town'
-  ];
+  // final List<String> routes = [
+  //   'Gulshan e Hadeed',
+  //   'Baldia Town',
+  //   'North Nazimabad',
+  //   'Steel Town'
+  // ];
+
+  final Map<String, String> allRoutes = {
+    'Gulshan e Hadeed': 'hadeed',
+    'Baldia Town': 'korangi',
+    'North Nazimabad': 'nazimabad',
+    'Steel Town': 'gulshan'
+  };
 
   String? _selectedRoute;
   bool _error = false;
 
   void _nextPage() {
     if (_selectedRoute != null) {
-      widget.onSelectRoute(_selectedRoute!);
+      widget.onSelectRoute(allRoutes[_selectedRoute!]!);
     } else {
       setState(() {
         _error = true;
@@ -37,6 +44,8 @@ class _BusRoutePanelState extends State<BusRoutePanel> {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> routes = allRoutes.keys.toList();
+
     return Animate(
       effects: const [
         SlideEffect(

@@ -15,7 +15,7 @@ class SignupForm extends StatefulWidget {
     required this.onClickSignup,
   });
 
-  final Future<bool?> Function(Map<User, String> formData) onClickSignup;
+  final Future<bool?> Function(Map<UserData, String> formData) onClickSignup;
 
   @override
   State<StatefulWidget> createState() => _SignupFormState();
@@ -23,7 +23,7 @@ class SignupForm extends StatefulWidget {
 
 class _SignupFormState extends State<SignupForm> {
   final _formKey = GlobalKey<FormState>();
-  Map<User, String> _userData = {};
+  Map<UserData, String> _userData = {};
   bool _isLoading = false;
 
   Future<void> _clickSignup() async {
@@ -69,14 +69,14 @@ class _SignupFormState extends State<SignupForm> {
   }
 
   void _saveInput(
-    User identifier,
+    UserData identifier,
     String? value,
   ) {
     _userData[identifier] = value!;
   }
 
   String? _matchPassword(String? value) {
-    var password = _userData[User.password]!;
+    var password = _userData[UserData.password]!;
     if (value == null || value.isEmpty) {
       return 'This field is required.';
     }
@@ -100,7 +100,7 @@ class _SignupFormState extends State<SignupForm> {
   }
 
   void _onPasswordChange(String? value) {
-    _userData[User.password] = value ?? '';
+    _userData[UserData.password] = value ?? '';
   }
 
   @override
@@ -134,7 +134,7 @@ class _SignupFormState extends State<SignupForm> {
                   placeholderText: 'Enter your Full Name',
                   placeholderIcon: Icons.person_outline,
                   onSave: (value) {
-                    _saveInput(User.fullName, value);
+                    _saveInput(UserData.fullName, value);
                   },
                   onValidation: _validateInput,
                 ),
@@ -146,7 +146,7 @@ class _SignupFormState extends State<SignupForm> {
                   placeholderText: 'Enter your email address',
                   placeholderIcon: Icons.mail_outline,
                   onSave: (value) {
-                    _saveInput(User.email, value);
+                    _saveInput(UserData.email, value);
                   },
                   onValidation: _validateEmail,
                 ),
@@ -158,7 +158,7 @@ class _SignupFormState extends State<SignupForm> {
                   placeholderText: 'Enter your student ID',
                   placeholderIcon: Icons.document_scanner_outlined,
                   onSave: (value) {
-                    _saveInput(User.studentId, value);
+                    _saveInput(UserData.studentId, value);
                   },
                   onValidation: _validateInput,
                 ),
@@ -172,7 +172,7 @@ class _SignupFormState extends State<SignupForm> {
                   hideText: true,
                   onChanged: _onPasswordChange,
                   onSave: (value) {
-                    _saveInput(User.password, value);
+                    _saveInput(UserData.password, value);
                   },
                   onValidation: _validateInput,
                 ),
@@ -185,7 +185,7 @@ class _SignupFormState extends State<SignupForm> {
                   placeholderIcon: Icons.key_outlined,
                   hideText: true,
                   onSave: (value) {
-                    // _saveInput(User.confirmPassword, value); extra field
+                    // _saveInput(UserData.confirmPassword, value); extra field
                   },
                   onValidation: _matchPassword,
                 ),
