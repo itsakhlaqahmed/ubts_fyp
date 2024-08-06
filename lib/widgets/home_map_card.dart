@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ubts_fyp/services/map_location_service.dart';
@@ -34,15 +33,15 @@ class _HomeMapCardState extends State<HomeMapCard> {
     print('position________________________--' + position.toString());
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-        // 24.829387636816918, 67.0585346141240,
+        // position.latitude,
+        // position.longitude,
+        24.830272953082, 67.05506649966024,
       );
 
       Placemark place = placemarks[0];
 
       setState(() {
-        _address = '${place.street}, ${place.locality}, ${place.country}';
+        _address = '${place.thoroughfare}, ${place.subLocality}';
       });
     } catch (e) {
       print(e);
@@ -62,99 +61,102 @@ class _HomeMapCardState extends State<HomeMapCard> {
       //   color: Colors.orange[200],
       // ),
       child: _currentLocation != null
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 300,
-                  child: GoogleMap(
-                    mapToolbarEnabled: false,
-                    liteModeEnabled: true,
-                    initialCameraPosition: CameraPosition(
-                      target: _currentLocation!,
-                      zoom: 17,
-                    ),
-                    markers: {
-                      Marker(
-                        markerId: const MarkerId('currentLocation'),
-                        position: _currentLocation!,
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 350,
+                    child: GoogleMap(
+                      mapToolbarEnabled: false,
+                      liteModeEnabled: true,
+                      initialCameraPosition: CameraPosition(
+                        target: _currentLocation!,
+                        zoom: 17,
                       ),
-                    },
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.orange[50],
-                  ),
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _routeName,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      markers: {
+                        Marker(
+                          markerId: const MarkerId('currentLocation'),
+                          position: _currentLocation!,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      Row(
-                        children: [
-                          const Text(
-                            'Buss Status: ',
-                            style: TextStyle(
-                              fontSize: 14,
-                              // fontWeight: FontWeight.bold,
+                      },
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.orange[50],
+                    ),
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.route_outlined),
+                            const SizedBox(width: 4),
+                            Text(
+                              _routeName,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Text(
-                            rideStarted ? 'on Route' : 'Not started',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 24,
+                        ),
+                        Row(
+                          children: [
+                            const Icon(Icons.directions_bus_outlined),
+
+                            const SizedBox(
+                              width: 4,
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Current Location: ',
-                            maxLines: 3,
-                            softWrap: true,
-                            style: TextStyle(
-                              fontSize: 14,
-                              // fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Flexible(
-                            child: Text(
-                              'Near $_address' ?? 'null',
+                            Text(
+                              rideStarted ? 'on Route' : 'Not started',
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 24,
-                      ),
-                      WideButton(onSubmitForm: () {}, buttonText: 'Full Map')
-                    ],
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(Icons.location_on_outlined),
+                            const SizedBox(
+                              width: 4,
+                            ),
+                            Flexible(
+                              child: Text(
+                                'Near $_address',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 24,
+                        ),
+                        WideButton(
+                          onSubmitForm: () {},
+                          buttonText: 'Full Map',
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-
-                // Text(_currentLocation.toString()),
-              ],
+                ],
+              ),
             )
           : const Center(
               child: CircularProgressIndicator(),
