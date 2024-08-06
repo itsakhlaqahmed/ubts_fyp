@@ -20,6 +20,7 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   void initState() {
+    checkFirstVisit();
     _pagecontroller = PageController(
       initialPage: 0,
     );
@@ -37,9 +38,12 @@ class _OnboardingState extends State<Onboarding> {
     bool hasVisited = prefs.getBool('hasVisited') ?? false;
 
     if (hasVisited) {
+      print('has visited chk done, true*************************************');
       navigateToLogin();
       return;
     }
+          print('has visited chk done, false*************************************');
+
   }
 
   void nextPage() async {
@@ -74,7 +78,6 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   Widget build(BuildContext context) {
-    checkFirstVisit();
     return PageView.builder(
       controller: _pagecontroller,
       onPageChanged: (index) {

@@ -17,9 +17,15 @@ class PersistantStorage {
       data[UserData.busRoute]!,
       data[UserData.busStop]!,
     ]);
+
   }
 
-  Future<Map<UserData, String>?> fetchLocalData() async {
+  Future<void> deleteLocalUser() async {
+    final SharedPreferences localStorage = await _sharedPreferences;
+    localStorage.clear();
+  }
+
+  Future<Map<UserData, dynamic>> fetchLocalUser() async {
     final SharedPreferences localStorage = await _sharedPreferences;
 
     List<String>? localData = localStorage.getStringList('user');
@@ -37,6 +43,6 @@ class PersistantStorage {
       return userData;
     }
 
-    return null;
+    return {UserData.userId: null};
   }
 }

@@ -13,15 +13,6 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // var isAuth = AuthService().currentUser;
-
-    // if (isAuth != null) {
-    //   Navigator.of(context).pushReplacement(
-    //     MaterialPageRoute(
-    //       builder: (ctx) => const Home(),
-    //     ),
-    //   );
-    // }
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       var isAuth = AuthService().currentUser;

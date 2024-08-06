@@ -56,9 +56,15 @@ class SuccessPage extends StatelessWidget {
               const SizedBox(
                 height: 48,
               ),
-              WideButton(onSubmitForm: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => Home(),),);
-              }, buttonText: 'Continue to app...')
+              WideButton(
+                  onSubmitForm: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const Home(),
+                      ),
+                    );
+                  },
+                  buttonText: 'Continue to app...')
             ],
           ),
         ),

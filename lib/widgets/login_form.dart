@@ -31,11 +31,11 @@ class _LoginFormState extends State<LoginForm> {
   String _password = '';
   bool _isLoading = false;
 
-  void _submitForm() {
+  void _submitForm() async {
     bool isValid = _formKey.currentState!.validate();
     if (isValid) {
       _formKey.currentState!.save();
-      _signInWithEmailAndPassword();
+      await _signInWithEmailAndPassword();
     }
   }
 
@@ -58,7 +58,7 @@ class _LoginFormState extends State<LoginForm> {
             UserData.isApproved: response?["isApproved"],
             UserData.studentId: response?["studentId"],
             UserData.busRoute: response?["busRoute"],
-            UserData.busStop: response?["studentId"],
+            UserData.busStop: response?["busStop"],
           };
           await PersistantStorage().persistUserData(userData);
         });
@@ -70,13 +70,14 @@ class _LoginFormState extends State<LoginForm> {
         snackBarType: CustomSnackbar.success,
         text: 'You have been logged in successfully',
       );
+
+      if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const Home(),
         ),
       );
     } catch (err) {
-      if (!mounted) return;
       CustomSnackBarBuilder().showCustomSnackBar(
         context,
         snackBarType: CustomSnackbar.error,

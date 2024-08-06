@@ -75,10 +75,16 @@ class _HomeMapCardState extends State<HomeMapCard> {
                         target: _currentLocation!,
                         zoom: 17,
                       ),
-                      markers: {
-                        Marker(
-                          markerId: const MarkerId('currentLocation'),
-                          position: _currentLocation!,
+                      // markers: {
+                      //   Marker(
+                      //     markerId: const MarkerId('currentLocation'),
+                      //     position: _currentLocation!,
+                      //   ),
+                      // },
+                      circles: {
+                        Circle(
+                          circleId: const CircleId('currentLocation'),
+                          center: _currentLocation!,
                         ),
                       },
                     ),
@@ -111,7 +117,6 @@ class _HomeMapCardState extends State<HomeMapCard> {
                         Row(
                           children: [
                             const Icon(Icons.directions_bus_outlined),
-
                             const SizedBox(
                               width: 4,
                             ),
