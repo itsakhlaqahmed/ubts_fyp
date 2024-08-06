@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:ubts_fyp/models/user.dart';
 import 'package:ubts_fyp/pages/login.dart';
@@ -94,131 +95,136 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: RefreshIndicator(
+        child: LiquidPullToRefresh(animSpeedFactor: 2,
+          height: 200,
+          backgroundColor: const Color.fromARGB(255, 253, 129, 59),
+          color:  const Color.fromARGB(141, 244, 174, 134),
+          showChildOpacityTransition: false,
           onRefresh: () async {
-            Future.delayed(Duration(seconds: 2), () {
+            Future.delayed(Duration(seconds: 1), () {
               print('refresh');
             });
-            print('refresh');
           },
-          // child: SingleChildScrollView(
-          child: !_isLoading
-              ? Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 8),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                _userData[UserData.fullName] ?? 'null',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                              const Spacer(),
-                              IconButton(
-                                onPressed: _signOut,
-                                icon: const Icon(Icons.exit_to_app_outlined),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            _userData[UserData.studentId] ?? 'null',
-                            style: const TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    // HomeMapCard(
-                    //   busId: _busId,
-                    // ),
-                    _getSkeletonLoader(),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Container(
-                        // height: 100,
-                        width: MediaQuery.of(context).size.width,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 16),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 10, 25, 37),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: !_isLoading
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
                         child: Column(
-                          // mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Driver',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
                             Row(
                               children: [
-                                Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: const Color.fromARGB(
-                                        162, 139, 176, 205),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _driverName,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white),
-                                    ),
-                                    Text(
-                                      _driverPhone,
-                                      style: const TextStyle(
-                                          fontSize: 12, color: Colors.white),
-                                    ),
-                                  ],
+                                Text(
+                                  _userData[UserData.fullName] ?? 'null',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                 ),
                                 const Spacer(),
-                                const Icon(
-                                  Icons.arrow_forward_ios_outlined,
-                                  color: Colors.white,
+                                IconButton(
+                                  onPressed: _signOut,
+                                  icon: const Icon(Icons.exit_to_app_outlined),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
+                            Text(
+                              _userData[UserData.studentId] ?? 'null',
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
-                )
-              : Text('data'),
-          // ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      // HomeMapCard(
+                      //   busId: _busId,
+                      // ),
+                      _getSkeletonLoader(),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Container(
+                          // height: 100,
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 16),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 10, 25, 37),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Column(
+                            // mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Driver',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: const Color.fromARGB(
+                                          162, 139, 176, 205),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        _driverName,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
+                                      Text(
+                                        _driverPhone,
+                                        style: const TextStyle(
+                                            fontSize: 12, color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  const Icon(
+                                    Icons.arrow_forward_ios_outlined,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Text('data'),
+          ),
         ),
       ),
     );

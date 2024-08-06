@@ -96,7 +96,7 @@ class LoginPage extends StatelessWidget {
                     child: Text(
                       'Don\'t have an account? Create now!',
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            color: Colors.indigo,
+                            color: Colors.orange,
                             fontWeight: FontWeight.bold,
                           ),
                     ),

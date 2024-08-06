@@ -214,7 +214,7 @@ class _SignupFormState extends State<SignupForm> {
             child: Text(
               'Already have an account? Login Now',
               style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    color: Colors.indigo,
+                    color: Colors.orange,
                     fontWeight: FontWeight.bold,
                   ),
             ),

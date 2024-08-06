@@ -15,12 +15,6 @@ class BusRoutePanel extends StatefulWidget {
 }
 
 class _BusRoutePanelState extends State<BusRoutePanel> {
-  // final List<String> routes = [
-  //   'Gulshan e Hadeed',
-  //   'Baldia Town',
-  //   'North Nazimabad',
-  //   'Steel Town'
-  // ];
 
   final Map<String, String> allRoutes = {
     'Gulshan e Hadeed': 'hadeed',
@@ -77,12 +71,12 @@ class _BusRoutePanelState extends State<BusRoutePanel> {
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: isSelected
-                        ? const Color.fromARGB(255, 84, 50, 187)
+                        ?  const Color.fromARGB(255, 253, 129, 59)
                         : Colors.black,
                   ),
                   borderRadius: BorderRadius.circular(6),
                   color: isSelected
-                      ? const Color.fromARGB(30, 117, 75, 243)
+                      ?  const Color.fromARGB(70, 255, 144, 80)
                       : Colors.white,
                 ),
                 child: InkWell(

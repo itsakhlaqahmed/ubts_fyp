@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ubts_fyp/models/bus_stop.dart';
+import 'package:ubts_fyp/widgets/wide_button.dart';
 
 class BusStopPanel extends StatefulWidget {
   const BusStopPanel({
@@ -80,11 +81,11 @@ class _BusStopPanelState extends State<BusStopPanel> {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? const Color.fromARGB(30, 117, 75, 243)
+                            ? Color.fromARGB(56, 254, 150, 90)
                             : Colors.white,
                         border: Border.all(
                           color: isSelected
-                              ? const Color.fromARGB(255, 84, 50, 187)
+                              ? const Color.fromARGB(255, 253, 129, 59)
                               : Colors.black,
                         ),
                         borderRadius: BorderRadius.circular(6),
@@ -164,13 +165,17 @@ class _BusStopPanelState extends State<BusStopPanel> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: isSelected
-                                      ? const Color.fromARGB(255, 59, 38, 122)
-                                      : const Color.fromARGB(255, 117, 75, 243),
+                                      ? const Color.fromARGB(255, 223, 101, 29)
+                                      : const Color.fromARGB(255, 253, 129, 59),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Center(
                                   child: InkWell(
-                                    onTap: () {},
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedStop = widget.busStops[index];
+                                      });
+                                    },
                                     child: Text(
                                       isSelected ? 'Selected' : 'Select',
                                       style: const TextStyle(
@@ -192,8 +197,8 @@ class _BusStopPanelState extends State<BusStopPanel> {
             const SizedBox(
               height: 16,
             ),
-            GestureDetector(
-              onTap: () {
+            WideButton(
+              onSubmitForm: () {
                 if (_selectedStop != null) {
                   setState(() {
                     _error = false;
@@ -205,22 +210,7 @@ class _BusStopPanelState extends State<BusStopPanel> {
                   });
                 }
               },
-              child: Container(
-                width: double.infinity,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: const Color.fromARGB(255, 117, 75, 243),
-                ),
-                child: Center(
-                  child: Text(
-                    'Signup',
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: Colors.white,
-                        ),
-                  ),
-                ),
-              ),
+              buttonText: 'Signup',
             ),
             const SizedBox(
               height: 72,

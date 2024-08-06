@@ -24,7 +24,7 @@ Future<void> main() async {
 }
 
 var lightTheme = ThemeData.light().colorScheme.copyWith(
-      primary: Color(0xFFFD813B),
+      primary: const Color(0xFFFD813B),
     );
 
 class MainApp extends StatelessWidget {
@@ -35,7 +35,10 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(textTheme: GoogleFonts.getTextTheme('Poppins')),
+      theme: ThemeData(
+        textTheme: GoogleFonts.getTextTheme('Poppins'),
+        colorScheme: lightTheme,
+      ),
       home: const Onboarding(),
     );
   }
