@@ -1,5 +1,6 @@
 enum UserData {
   userId,
+  userType,
   fullName,
   email,
   studentId,
@@ -7,4 +8,5 @@ enum UserData {
   busRoute,
   busStop,
   isApproved,
+
 }

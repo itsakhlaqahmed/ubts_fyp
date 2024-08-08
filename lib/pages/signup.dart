@@ -18,7 +18,9 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  Map<UserData, String> signUpData = {};
+  Map<UserData, String> signUpData = {
+    UserData.userType: 'user',
+  };
   int activeFormIndex = 0;
 
   var busStops = const [
@@ -66,7 +68,7 @@ class _SignupPageState extends State<SignupPage> {
     signUpData[UserData.busStop] = busStop;
 
     try {
-      _saveUserData();
+      // _saveUserData();
       if (!mounted) return;
       CustomSnackBarBuilder().showCustomSnackBar(
         context,
@@ -86,7 +88,7 @@ class _SignupPageState extends State<SignupPage> {
       CustomSnackBarBuilder().showCustomSnackBar(
         context,
         snackBarType: CustomSnackbar.error,
-        text: err.toString(),
+        text: 'Error id: Signup-90 \n$err ' ,
       );
     }
   } // end _selectStop
@@ -98,7 +100,8 @@ class _SignupPageState extends State<SignupPage> {
       'studentId': signUpData[UserData.studentId],
       'busRoute': signUpData[UserData.busRoute],
       'busStop': signUpData[UserData.busStop],
-      'isApproved': 'false'
+      'isApproved': 'false',
+      'userType' : signUpData[UserData.userType]
     };
 
     await FirestoreService().addUserData(
@@ -109,7 +112,6 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(UserData.busRoute.toString());
 
     Widget content = SignupForm(
       onClickSignup: _clickCreateAccount,

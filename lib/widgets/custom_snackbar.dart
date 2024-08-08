@@ -22,6 +22,7 @@ class CustomSnackBarBuilder {
         backgroundColor: Colors.transparent,
         elevation: 0,
         behavior: SnackBarBehavior.floating,
+        duration: const Duration(milliseconds: 2000),
         content: Container(
           // height: 300,
           clipBehavior: Clip.hardEdge,

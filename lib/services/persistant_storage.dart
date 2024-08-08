@@ -9,15 +9,15 @@ class PersistantStorage {
     final SharedPreferences localStorage = await _sharedPreferences;
 
     await localStorage.setStringList('user', [
-      data[UserData.userId]!,
-      data[UserData.fullName]!,
-      data[UserData.email]!,
-      data[UserData.studentId]!,
-      data[UserData.isApproved]!,
-      data[UserData.busRoute]!,
-      data[UserData.busStop]!,
+      data[UserData.userId] ?? 'null',
+      data[UserData.fullName] ?? 'null',
+      data[UserData.email] ?? 'null',
+      data[UserData.studentId] ?? 'null',
+      data[UserData.isApproved] ?? 'null',
+      data[UserData.busRoute] ?? 'null',
+      data[UserData.busStop] ?? 'null',
+      data[UserData.userType] ?? 'null',
     ]);
-
   }
 
   Future<void> deleteLocalUser() async {
@@ -38,6 +38,7 @@ class PersistantStorage {
         UserData.isApproved: localData[4],
         UserData.busRoute: localData[5],
         UserData.busStop: localData[6],
+        UserData.userType: localData[7],
       };
 
       return userData;

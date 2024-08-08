@@ -53,6 +53,7 @@ class _LoginFormState extends State<LoginForm> {
         FirestoreService().getUserData(userId: user.uid).then((response) async {
           Map<UserData, String> userData = {
             UserData.userId: user.uid,
+            UserData.userType: response?["fullName"] ?? 'user', 
             UserData.fullName: response?["fullName"],
             UserData.email: response?["email"],
             UserData.isApproved: response?["isApproved"],
