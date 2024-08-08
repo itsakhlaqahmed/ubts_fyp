@@ -42,8 +42,7 @@ class _OnboardingState extends State<Onboarding> {
       navigateToLogin();
       return;
     }
-          print('has visited chk done, false*************************************');
-
+    print('has visited chk done, false*************************************');
   }
 
   void nextPage() async {

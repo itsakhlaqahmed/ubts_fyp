@@ -15,7 +15,6 @@ class BusRoutePanel extends StatefulWidget {
 }
 
 class _BusRoutePanelState extends State<BusRoutePanel> {
-
   final Map<String, String> allRoutes = {
     'Gulshan e Hadeed': 'hadeed',
     'Baldia Town': 'korangi',
@@ -36,9 +35,74 @@ class _BusRoutePanelState extends State<BusRoutePanel> {
     }
   }
 
+  Widget _getRouteList() {
+    final List<String> routes = allRoutes.keys.toList();
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: routes.length,
+      itemBuilder: (context, index) {
+        bool isSelected = routes.indexOf(_selectedRoute.toString()) == index;
+        return _getRouteTile(isSelected, routes[index]);
+      },
+    );
+  }
+
+  Widget _getRouteTile(bool isSelected, String route) {
+    return Container(
+      margin: const EdgeInsets.only(
+        bottom: 16,
+      ),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: isSelected
+              ? const Color.fromARGB(255, 253, 129, 59)
+              : Colors.black,
+        ),
+        borderRadius: BorderRadius.circular(6),
+        color:
+            isSelected ? const Color.fromARGB(70, 255, 144, 80) : Colors.white,
+      ),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            _selectedRoute = route;
+            _error = false;
+          });
+        },
+        child: ListTile(
+          title: Text(
+            route,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          leading: const Icon(
+            Icons.pin_drop_outlined,
+          ),
+          trailing: const Icon(
+            Icons.arrow_forward_ios_outlined,
+          ),
+        ),
+      ),
+    );
+  } // end getRouteTile
+
+  Widget _getErrorMessage() {
+    return const Center(
+      child: Text(
+        'Kindly select a route',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.red,
+          fontSize: 12,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<String> routes = allRoutes.keys.toList();
 
     return Animate(
       effects: const [
@@ -58,53 +122,7 @@ class _BusRoutePanelState extends State<BusRoutePanel> {
           const SizedBox(
             height: 24,
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: routes.length,
-            itemBuilder: (context, index) {
-              bool isSelected =
-                  routes.indexOf(_selectedRoute.toString()) == index;
-              return Container(
-                margin: const EdgeInsets.only(
-                  bottom: 16,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: isSelected
-                        ?  const Color.fromARGB(255, 253, 129, 59)
-                        : Colors.black,
-                  ),
-                  borderRadius: BorderRadius.circular(6),
-                  color: isSelected
-                      ?  const Color.fromARGB(70, 255, 144, 80)
-                      : Colors.white,
-                ),
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      _selectedRoute = routes[index];
-                      _error = false;
-                    });
-                  },
-                  child: ListTile(
-                    title: Text(
-                      routes[index],
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    leading: const Icon(
-                      Icons.pin_drop_outlined,
-                    ),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios_outlined,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
+          _getRouteList(),
           const SizedBox(
             height: 24,
           ),
@@ -115,18 +133,7 @@ class _BusRoutePanelState extends State<BusRoutePanel> {
           const SizedBox(
             height: 8,
           ),
-          _error
-              ? const Center(
-                  child: Text(
-                    'Kindly select a route',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 12,
-                    ),
-                  ),
-                )
-              : const SizedBox.shrink(),
+          _error ? _getErrorMessage() : const SizedBox.shrink(),
         ],
       ),
     );
