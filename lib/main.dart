@@ -1,21 +1,19 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ubts_fyp/pages/home.dart';
-import 'package:ubts_fyp/pages/login.dart';
+import 'package:ubts_fyp/pages/driver/driver_home.dart';
 import 'package:ubts_fyp/pages/onboarding.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:ubts_fyp/services/auth_service.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    var a = await Firebase.initializeApp(
+    var firebase = await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    print("**********" + a.toString());
+    print("******* $firebase *******");
   } catch (e) {
     // handle erro
     print('error');
@@ -39,7 +37,7 @@ class MainApp extends StatelessWidget {
         textTheme: GoogleFonts.getTextTheme('Poppins'),
         colorScheme: lightTheme,
       ),
-      home: const Onboarding(),
+      home: const DriverHome(),
     );
   }
 }

@@ -40,7 +40,6 @@ class _SignupPageState extends State<SignupPage> {
       email: formData[UserData.email]!,
       password: formData[UserData.password]!,
     );
-    
 
     signUpData.remove(UserData.password);
 
@@ -51,11 +50,10 @@ class _SignupPageState extends State<SignupPage> {
         activeFormIndex = 1;
       });
       return true;
-    } 
+    }
 
     return null;
   } // end _clickCreateAccount
-
 
   void _selectRoute(String route) {
     signUpData[UserData.busRoute] = route;
@@ -88,7 +86,7 @@ class _SignupPageState extends State<SignupPage> {
       CustomSnackBarBuilder().showCustomSnackBar(
         context,
         snackBarType: CustomSnackbar.error,
-        text: 'Error id: Signup-90 \n$err ' ,
+        text: 'Error id: Signup-90 \n$err ',
       );
     }
   } // end _selectStop
@@ -101,7 +99,7 @@ class _SignupPageState extends State<SignupPage> {
       'busRoute': signUpData[UserData.busRoute],
       'busStop': signUpData[UserData.busStop],
       'isApproved': 'false',
-      'userType' : signUpData[UserData.userType]
+      'userType': signUpData[UserData.userType]
     };
 
     await FirestoreService().addUserData(
@@ -112,7 +110,6 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-
     Widget content = SignupForm(
       onClickSignup: _clickCreateAccount,
     );
@@ -151,8 +148,9 @@ class _SignupPageState extends State<SignupPage> {
           child: Text(
             'UBTS',
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 40,
+                  color: const Color.fromARGB(255, 253, 129, 59),
                 ),
           ),
         ),

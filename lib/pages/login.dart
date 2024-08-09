@@ -13,7 +13,6 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     SchedulerBinding.instance.addPostFrameCallback((_) {
       var isAuth = AuthService().currentUser;
 
@@ -32,8 +31,9 @@ class LoginPage extends StatelessWidget {
           child: Text(
             'UBTS',
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 24,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 40,
+                  color: const Color.fromARGB(255, 253, 129, 59),
                 ),
           ),
         ),

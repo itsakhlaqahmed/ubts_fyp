@@ -20,10 +20,7 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   void initState() {
-    checkFirstVisit();
-    _pagecontroller = PageController(
-      initialPage: 0,
-    );
+    _pagecontroller = PageController(initialPage: 0);
     super.initState();
   }
 
@@ -38,18 +35,13 @@ class _OnboardingState extends State<Onboarding> {
     bool hasVisited = prefs.getBool('hasVisited') ?? false;
 
     if (hasVisited) {
-      print('has visited chk done, true*************************************');
       navigateToLogin();
       return;
     }
-    print('has visited chk done, false*************************************');
   }
 
   void nextPage() async {
     if (_activePageIndex >= screenData.length - 1) {
-      final prefs = await _sharedPreferences;
-      prefs.setBool('hasVisited', true);
-
       navigateToSignup();
     }
 
@@ -59,7 +51,11 @@ class _OnboardingState extends State<Onboarding> {
     );
   }
 
-  void navigateToLogin() {
+  void navigateToLogin() async {
+    final prefs = await _sharedPreferences;
+    prefs.setBool('hasVisited', true);
+
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => const LoginPage(),
@@ -67,7 +63,10 @@ class _OnboardingState extends State<Onboarding> {
     );
   }
 
-  void navigateToSignup() {
+  void navigateToSignup() async {
+    final prefs = await _sharedPreferences;
+    prefs.setBool('hasVisited', true);
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => const SignupPage(),
@@ -77,6 +76,7 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   Widget build(BuildContext context) {
+    checkFirstVisit();
     return PageView.builder(
       controller: _pagecontroller,
       onPageChanged: (index) {

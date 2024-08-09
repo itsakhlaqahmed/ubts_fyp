@@ -61,6 +61,7 @@ class _LoginFormState extends State<LoginForm> {
             UserData.busRoute: response?["busRoute"],
             UserData.busStop: response?["busStop"],
           };
+          print(userData);
           await PersistantStorage().persistUserData(userData);
         });
       }

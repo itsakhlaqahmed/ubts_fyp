@@ -52,14 +52,14 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           validator: widget.onValidation,
           onChanged: widget.onChanged,
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             suffixIcon: widget.hideText ?? false
                 ? IconButton(
                     onPressed: () {
                       setState(() {
                         _isTextHidden = !_isTextHidden;
                       });
-                      
                     },
                     icon: _isTextHidden
                         ? const Icon(Icons.visibility_outlined)
@@ -68,7 +68,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                 : null,
             label: Row(
               children: [
-                Icon(widget.placeholderIcon),
+                Icon(
+                  widget.placeholderIcon,
+                  // color: const Color.fromARGB(255, 253, 129, 59),
+                ),
                 const SizedBox(
                   width: 8,
                 ),
