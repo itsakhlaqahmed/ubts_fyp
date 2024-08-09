@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:ubts_fyp/models/user.dart';
+import 'package:ubts_fyp/pages/driver/driver_map_screen.dart';
 import 'package:ubts_fyp/pages/login.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
@@ -27,15 +29,57 @@ class _DriverHomeState extends State<DriverHome> {
   Map<UserData, dynamic> _userData = {};
   final AuthService _authService = AuthService();
 
+  @override
+  void initState() {
+    _fetchLocalUser();
+    super.initState();
+  }
+
   void _nextPage() {
     if (_selectedRoute != null) {
-      // widget.onSelectRoute(allRoutes[_selectedRoute!]!);
-      print('click');
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => DriverMapScreen(userData: _userData, busId: 'busId'),
+        ),
+      );
       return;
     }
     setState(() {
       _showError = false;
     });
+  }
+
+  Future<void> _fetchLocalUser() async {
+    await Future.delayed(
+      const Duration(milliseconds: 500),
+    );
+
+    Map<UserData, dynamic> userData =
+        await PersistantStorage().fetchLocalUser();
+
+    if (userData[UserData.userId] == null) {
+      await Future.delayed(
+        const Duration(milliseconds: 500),
+      );
+
+      userData = await PersistantStorage().fetchLocalUser();
+    }
+
+    setState(() {
+      _userData = userData;
+    });
+  } // fetch local user
+
+  void _signOut() async {
+    await _authService.signOut();
+    await PersistantStorage().deleteLocalUser();
+
+    if (!mounted) return;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (ctx) => const LoginPage(),
+      ),
+    );
   }
 
   Widget _getRouteList() {
@@ -114,21 +158,12 @@ class _DriverHomeState extends State<DriverHome> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text(
-                _userData[UserData.fullName] ?? 'null',
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const Spacer(),
-              IconButton(
-                onPressed: _signOut,
-                icon: const Icon(Icons.exit_to_app_outlined),
-              ),
-            ],
+          Text(
+            _userData[UserData.fullName] ?? 'null',
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           Text(
             _userData[UserData.studentId] ?? 'null',
@@ -140,18 +175,6 @@ class _DriverHomeState extends State<DriverHome> {
       ),
     );
   } // end _getTitleBar
-
-  void _signOut() async {
-    await _authService.signOut();
-    await PersistantStorage().deleteLocalUser();
-
-    if (!mounted) return;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (ctx) => const LoginPage(),
-      ),
-    );
-  }
 
   Widget _getErrorMessage() {
     return const Center(
@@ -257,9 +280,56 @@ class _DriverHomeState extends State<DriverHome> {
     );
   }
 
+  Widget _getTitleBarSkeleton() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 0.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            placeHolder(height: 24, width: 140),
+            const SizedBox(height: 8,),
+            placeHolder(height: 16, width: 80),
+          ],
+        ),
+      ),
+    );
+  } // end _getTitleBarSkeleton
+
+  Widget placeHolder({required double height, double? width}) {
+    return Container(
+      height: height,
+      width: width ?? double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: Colors.amber,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Driver Home',
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.w900,
+                fontSize: 24,
+                color: const Color.fromARGB(255, 253, 129, 59),
+              ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: _signOut,
+            icon: const Icon(Icons.exit_to_app_outlined),
+          ),
+        ],
+      ),
+      drawer: const Column(),
       body: Animate(
         effects: const [
           SlideEffect(
@@ -278,7 +348,7 @@ class _DriverHomeState extends State<DriverHome> {
                   const SizedBox(height: 8),
                   _userData[UserData.userId] != null
                       ? _getTitleBar()
-                      : _getTitleBar(), //_getTitleBarSkeleton(),
+                      : _getTitleBarSkeleton(),
                   const SizedBox(
                     height: 48,
                   ),
@@ -296,7 +366,6 @@ class _DriverHomeState extends State<DriverHome> {
                   const SizedBox(
                     height: 16,
                   ),
-
                   _getRouteList(),
                   const SizedBox(
                     height: 24,
