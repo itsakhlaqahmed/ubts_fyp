@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class BusRide {
@@ -13,6 +14,7 @@ class BusRide {
   final String routeName;
   final String rideStatus;
   final Map<String, dynamic> locations;
+  
 }
 
 class MapLocationService {
@@ -85,6 +87,19 @@ class MapLocationService {
 
     return false;
   } // end updateLocation
+
+  Future<void> startRide(String busId, LatLng locationData) async {
+    final url = Uri.parse('$_databaseUrl/Buses/$busId.json');
+
+    var body = {
+      'rideStatus': 'null',
+    };
+
+    final response = await http.post(
+      url,
+      body: json.encode(body),
+    );
+  }
 
   // get the latest location for a bus id
   Future<Map<String, dynamic>?> fetchLocation(String busId) async {

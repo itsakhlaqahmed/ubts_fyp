@@ -14,7 +14,7 @@ class HomeMapCard extends StatefulWidget {
     required this.currentLocation,
     this.address,
     this.fullMapEnabled,
-    this.onExitFullScreen,
+    this.onExitFullScreen, this.onClickFullScreen,
   });
 
   final String routeName;
@@ -22,6 +22,7 @@ class HomeMapCard extends StatefulWidget {
   final String? address;
   final bool? fullMapEnabled;
   final Function? onExitFullScreen;
+  final Function? onClickFullScreen;
 
   @override
   State<HomeMapCard> createState() => _HomeMapCardState();
@@ -200,8 +201,9 @@ class _HomeMapCardState extends State<HomeMapCard> {
                       const SizedBox(
                         height: 24,
                       ),
+                      
                       WideButton(
-                        onSubmitForm: () async {},
+                        onSubmitForm: widget.onClickFullScreen!,
                         buttonText: 'Full Map',
                       ),
                     ],

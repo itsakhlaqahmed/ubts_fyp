@@ -39,7 +39,7 @@ class MainApp extends StatelessWidget {
         colorScheme: lightTheme,
       ),
       // home: const DriverMapScreen(userData: {}, busId: ''),
-      home: const DriverHome(),
+      home: const Onboarding(),
     );
   }
 }

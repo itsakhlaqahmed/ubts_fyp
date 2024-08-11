@@ -62,6 +62,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
   @override
   void initState() {
     _getLocation();
+    _startLocation();
     super.initState();
   }
 
@@ -124,6 +125,12 @@ class _StartRidePagetate extends State<DriverMapScreen> {
   void _exitFullScreen() {
     setState(() {
       _fullMapEnabled = false;
+    });
+  }
+
+  void _enableFullScreen() {
+    setState(() {
+      _fullMapEnabled = true;
     });
   }
 
@@ -259,20 +266,21 @@ class _StartRidePagetate extends State<DriverMapScreen> {
                               routeName: 'Gulshan e Hadeed',
                               currentLocation: _currentLocation!,
                               address: _address,
+                              onClickFullScreen: _enableFullScreen,
                             )
                           : _getMapSkeleton(),
                       const SizedBox(
                         height: 16,
                       ),
-                      WideButton(
-                        // onSubmitForm: _startLocation,
-                        onSubmitForm: () {
-                          setState(() {
-                            _fullMapEnabled = true;
-                          });
-                        },
-                        buttonText: 'fetch location',
-                      ),
+                      // WideButton(
+                      //   // onSubmitForm: _startLocation,
+                      //   onSubmitForm: () {
+                      //     setState(() {
+                      //       _fullMapEnabled = true;
+                      //     });
+                      //   },
+                      //   buttonText: 'fetch location',
+                      // ),
                     ],
                   ),
                 ),

@@ -66,7 +66,7 @@ class _SignupPageState extends State<SignupPage> {
     signUpData[UserData.busStop] = busStop;
 
     try {
-      // _saveUserData();
+      _saveUserData();
       if (!mounted) return;
       CustomSnackBarBuilder().showCustomSnackBar(
         context,

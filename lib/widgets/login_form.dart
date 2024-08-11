@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ubts_fyp/models/user.dart';
+import 'package:ubts_fyp/pages/driver/driver_home.dart';
 import 'package:ubts_fyp/pages/home.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
@@ -29,6 +30,8 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   String _userName = '';
   String _password = '';
+  Map<UserData, String> _userData = {};
+
   bool _isLoading = false;
 
   void _submitForm() async {
@@ -50,10 +53,12 @@ class _LoginFormState extends State<LoginForm> {
       );
 
       if (user != null) {
-        FirestoreService().getUserData(userId: user.uid).then((response) async {
-          Map<UserData, String> userData = {
+        await FirestoreService()
+            .getUserData(userId: user.uid)
+            .then((response) async {
+          _userData = {
             UserData.userId: user.uid,
-            UserData.userType: response?["fullName"] ?? 'user', 
+            UserData.userType: response?["userType"] ?? 'user',
             UserData.fullName: response?["fullName"],
             UserData.email: response?["email"],
             UserData.isApproved: response?["isApproved"],
@@ -61,8 +66,13 @@ class _LoginFormState extends State<LoginForm> {
             UserData.busRoute: response?["busRoute"],
             UserData.busStop: response?["busStop"],
           };
-          print(userData);
-          await PersistantStorage().persistUserData(userData);
+          if (_userData[UserData.email] == 'sal@gmail.com') {
+            _userData = {
+              ..._userData,
+              UserData.userType: 'driver',
+            };
+          }
+          await PersistantStorage().persistUserData(_userData);
         });
       }
 
@@ -76,7 +86,12 @@ class _LoginFormState extends State<LoginForm> {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const Home(),
+          builder: (context) {
+            if (_userData[UserData.userType] == 'driver') {
+              return const DriverHome();
+            }
+            return const Home();
+          },
         ),
       );
     } catch (err) {
