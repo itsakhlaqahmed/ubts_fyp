@@ -98,7 +98,6 @@ class _SignupPageState extends State<SignupPage> {
       'studentId': signUpData[UserData.studentId],
       'busRoute': signUpData[UserData.busRoute],
       'busStop': signUpData[UserData.busStop],
-      'isApproved': 'false',
       'userType': signUpData[UserData.userType]
     };
 

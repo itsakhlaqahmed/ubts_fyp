@@ -14,7 +14,8 @@ class HomeMapCard extends StatefulWidget {
     required this.currentLocation,
     this.address,
     this.fullMapEnabled,
-    this.onExitFullScreen, this.onClickFullScreen,
+    this.onExitFullScreen,
+    this.onClickFullScreen,
   });
 
   final String routeName;
@@ -44,11 +45,10 @@ class _HomeMapCardState extends State<HomeMapCard> {
 
   Widget _getGoogleMap() {
     return GoogleMap(
-      onMapCreated: (controller) {
+      onMapCreated: (controller) async {
         _googleMapController.complete(controller);
       },
       mapToolbarEnabled: false,
-      gestureRecognizers: {},
       minMaxZoomPreference: widget.fullMapEnabled != null
           ? const MinMaxZoomPreference(11, 20)
           : const MinMaxZoomPreference(17, 17),
@@ -57,7 +57,6 @@ class _HomeMapCardState extends State<HomeMapCard> {
       zoomGesturesEnabled: true,
       myLocationButtonEnabled: true,
       myLocationEnabled: true,
-      // trafficEnabled: true,
 
       initialCameraPosition: CameraPosition(
         target: widget.currentLocation,
@@ -113,29 +112,6 @@ class _HomeMapCardState extends State<HomeMapCard> {
                 SizedBox(
                   height: 350,
                   child: _getGoogleMap(),
-                  // child: GoogleMap(
-                  //   onMapCreated: (controller) {
-                  //     _googleMapController.complete(controller);
-                  //   },
-                  //   mapToolbarEnabled: false,
-                  //   scrollGesturesEnabled: false,
-                  //   zoomControlsEnabled: false,
-                  //   zoomGesturesEnabled: true,
-                  //   initialCameraPosition: CameraPosition(
-                  //     target: widget.currentLocation,
-                  //     zoom: 17,
-                  //   ),
-                  //   circles: {
-                  //     Circle(
-                  //       circleId: const CircleId('currentLocation'),
-                  //       center: widget.currentLocation,
-                  //       radius: 20,
-                  //       fillColor: Colors.orange,
-                  //       strokeColor: const Color.fromARGB(133, 255, 204, 128),
-                  //       strokeWidth: 30,
-                  //     ),
-                  //   },
-                  // ),
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -201,7 +177,6 @@ class _HomeMapCardState extends State<HomeMapCard> {
                       const SizedBox(
                         height: 24,
                       ),
-                      
                       WideButton(
                         onSubmitForm: widget.onClickFullScreen!,
                         buttonText: 'Full Map',

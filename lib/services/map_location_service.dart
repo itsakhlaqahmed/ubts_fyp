@@ -14,12 +14,9 @@ class BusRide {
   final String routeName;
   final String rideStatus;
   final Map<String, dynamic> locations;
-  
 }
 
 class MapLocationService {
-  Timer? _timer;
-
   final String _databaseUrl =
       'https://flutter-test-project-58f59-default-rtdb.firebaseio.com/';
 
@@ -88,14 +85,27 @@ class MapLocationService {
     return false;
   } // end updateLocation
 
-  Future<void> startRide(String busId, LatLng locationData) async {
+  Future<void> startRide(
+      {required String busId,
+      required String direction,
+      required LatLng locationData,
+      required Map<String, dynamic> driver}) async {
     final url = Uri.parse('$_databaseUrl/Buses/$busId.json');
 
     var body = {
-      'rideStatus': 'null',
+      'rideStatus': 'started',
+      'direction': direction,
+      'startTime': DateTime.now().toString(),
+      'driver': driver,
+      'locations': {
+        DateTime.now().toString(): {
+          'latitude': locationData.latitude,
+          'longitude': locationData.longitude,
+        }
+      }
     };
 
-    final response = await http.post(
+    await http.post(
       url,
       body: json.encode(body),
     );
@@ -131,14 +141,7 @@ class MapLocationService {
   }
 
   // start sending data after an interval
-  startSendingData(int n) {
-    _timer = Timer.periodic(
-      const Duration(seconds: 5),
-      (timer) {
-        fakeFetchLocation(n);
-      },
-    );
-  }
+  startSendingData(int n) {}
 
   Future<Map<String, dynamic>?> fakeFetchLocation(int num) async {
     final url = Uri.parse('$_databaseUrl/fakeLocations/bus1.json');

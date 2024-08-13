@@ -12,7 +12,6 @@ import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/map_location_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
 import 'package:ubts_fyp/widgets/home_map_card.dart';
-import 'package:ubts_fyp/widgets/wide_button.dart';
 
 class DriverMapScreen extends StatefulWidget {
   const DriverMapScreen({
@@ -39,12 +38,13 @@ class _StartRidePagetate extends State<DriverMapScreen> {
   bool _locationServiceRunning = false;
   bool _fullMapEnabled = false;
 
-  Future<void> _startLocation() async {
+  Future<void> _startLiveLocation() async {
     setState(() {
       _locationServiceRunning = true;
     });
     // get location for the first time
     await _getLocation();
+    // _mapLocationService.start();
 
     // then after every x seconds
     _timer = Timer.periodic(const Duration(seconds: 3), (_) async {
@@ -61,8 +61,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
 
   @override
   void initState() {
-    _getLocation();
-    _startLocation();
+    _startLiveLocation();
     super.initState();
   }
 
@@ -224,18 +223,22 @@ class _StartRidePagetate extends State<DriverMapScreen> {
     );
   }
 
+  Widget _getFullScreenMap() {
+    return HomeMapCard(
+      routeName: 'Gulshan e Hadeed',
+      currentLocation: _currentLocation!,
+      address: _address,
+      fullMapEnabled: _fullMapEnabled,
+      onExitFullScreen: _exitFullScreen,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: _fullMapEnabled
-            ? HomeMapCard(
-                routeName: 'Gulshan e Hadeed',
-                currentLocation: _currentLocation!,
-                address: _address,
-                fullMapEnabled: _fullMapEnabled,
-                onExitFullScreen: _exitFullScreen,
-              )
+            ? _getFullScreenMap()
             : LiquidPullToRefresh(
                 animSpeedFactor: 2,
                 height: 200,
@@ -272,15 +275,6 @@ class _StartRidePagetate extends State<DriverMapScreen> {
                       const SizedBox(
                         height: 16,
                       ),
-                      // WideButton(
-                      //   // onSubmitForm: _startLocation,
-                      //   onSubmitForm: () {
-                      //     setState(() {
-                      //       _fullMapEnabled = true;
-                      //     });
-                      //   },
-                      //   buttonText: 'fetch location',
-                      // ),
                     ],
                   ),
                 ),
