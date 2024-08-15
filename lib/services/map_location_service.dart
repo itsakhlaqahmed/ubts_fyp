@@ -32,12 +32,8 @@ class MapLocationService {
     final response = await http.put(url, body: json.encode(busData));
 
     if (response.statusCode == 200) {
-      print('bus init success');
       return true;
-    } else {
-      print('bus init failed');
     }
-
     return false;
   }
 
@@ -47,21 +43,16 @@ class MapLocationService {
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      print('data fetch success $busId');
-
       final data = json.decode(response.body);
       final rideStatus = data['rideStatus'];
       final routeName = data['routeName'];
       final Map<String, dynamic> locations = data['locations'];
-      print(data);
       return BusRide(
         routeName: routeName,
         rideStatus: rideStatus,
         locations: locations,
       );
-    } else {
-      print(response.statusCode);
-    }
+    } else {}
 
     return null;
   } // end fetch bus
@@ -88,27 +79,24 @@ class MapLocationService {
   Future<void> startRide(
       {required String busId,
       required String direction,
-      required LatLng locationData,
       required Map<String, dynamic> driver}) async {
     final url = Uri.parse('$_databaseUrl/Buses/$busId.json');
 
-    var body = {
+    Map<String, dynamic> body = {
       'rideStatus': 'started',
+      'busInfo': 'null',
       'direction': direction,
       'startTime': DateTime.now().toString(),
       'driver': driver,
-      'locations': {
-        DateTime.now().toString(): {
-          'latitude': locationData.latitude,
-          'longitude': locationData.longitude,
-        }
-      }
     };
 
-    await http.post(
+    // final response =
+    await http.put(
       url,
       body: json.encode(body),
     );
+
+    // print(response.body.toString() + '************************************8');
   }
 
   // get the latest location for a bus id
@@ -118,8 +106,6 @@ class MapLocationService {
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      print('data fetch success $busId');
-
       final Map<String, dynamic> data = json.decode(response.body);
       final Map<String, dynamic> latestLocation =
           data.entries.last.value; // last value is the latest

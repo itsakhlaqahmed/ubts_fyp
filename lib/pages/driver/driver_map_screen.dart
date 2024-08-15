@@ -18,10 +18,14 @@ class DriverMapScreen extends StatefulWidget {
     super.key,
     required this.userData,
     required this.busId,
+    required this.direction,
+    required this.busName,
   });
 
   final Map<UserData, dynamic> userData;
+  final String busName;
   final String busId;
+  final String direction;
 
   @override
   State<DriverMapScreen> createState() => _StartRidePagetate();
@@ -35,28 +39,48 @@ class _StartRidePagetate extends State<DriverMapScreen> {
   LatLng? _currentLocation;
   String? _address;
   Timer? _timer;
-  bool _locationServiceRunning = false;
+  // bool _locationServiceRunning = false;
   bool _fullMapEnabled = false;
 
   Future<void> _startLiveLocation() async {
-    setState(() {
-      _locationServiceRunning = true;
-    });
-    // get location for the first time
-    await _getLocation();
-    // _mapLocationService.start();
+    final Map<String, dynamic> driver = {
+      'name': widget.userData[UserData.fullName],
+      // 'phone': widget.
+    };
+    // setState(() {
+    //   _locationServiceRunning = true;
+    // });
 
-    // then after every x seconds
-    _timer = Timer.periodic(const Duration(seconds: 3), (_) async {
+    try {
+      // get location for the first time
       await _getLocation();
-    });
+      await _mapLocationService.startRide(
+        busId: widget.busId,
+        direction: widget.direction,
+        driver: driver,
+      );
+
+      // then after every x seconds
+      _timer = Timer.periodic(const Duration(seconds: 5), (_) async {
+        await _getLocation();
+        await _mapLocationService.updateLocation(
+          widget.busId,
+          {
+            'latitude': _currentLocation!.latitude,
+            'longitude': _currentLocation!.longitude,
+          },
+        );
+      });
+    } catch (err) {
+      // print(err.toString() + '**************************');
+    }
   }
 
   Future<void> _endLiveShare() async {
     _timer?.cancel();
-    setState(() {
-      _locationServiceRunning = false;
-    });
+    // setState(() {
+    //   _locationServiceRunning = false;
+    // });
   }
 
   @override
@@ -112,6 +136,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
   void _signOut() async {
     await _authService.signOut();
     await PersistantStorage().deleteLocalUser();
+    await _endLiveShare();
 
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
@@ -225,7 +250,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
 
   Widget _getFullScreenMap() {
     return HomeMapCard(
-      routeName: 'Gulshan e Hadeed',
+      routeName: widget.busName,
       currentLocation: _currentLocation!,
       address: _address,
       fullMapEnabled: _fullMapEnabled,
@@ -266,7 +291,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
                       ),
                       _currentLocation != null
                           ? HomeMapCard(
-                              routeName: 'Gulshan e Hadeed',
+                              routeName: widget.busName,
                               currentLocation: _currentLocation!,
                               address: _address,
                               onClickFullScreen: _enableFullScreen,

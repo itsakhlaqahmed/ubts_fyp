@@ -18,9 +18,9 @@ class DriverHome extends StatefulWidget {
 class _DriverHomeState extends State<DriverHome> {
   final Map<String, String> allRoutes = {
     'Gulshan e Hadeed': 'hadeed',
-    'Baldia Town': 'korangi',
+    'Korangi': 'korangi',
     'North Nazimabad': 'nazimabad',
-    'Steel Town': 'gulshan'
+    'Gulshan e Iqbal': 'gulshan'
   };
 
   String? _selectedRoute;
@@ -39,7 +39,12 @@ class _DriverHomeState extends State<DriverHome> {
     if (_selectedRoute != null) {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (_) => DriverMapScreen(userData: _userData, busId: 'busId'),
+          builder: (_) => DriverMapScreen(
+            userData: _userData,
+            busId: allRoutes[_selectedRoute]!,
+            direction: _direction!,
+            busName: _selectedRoute!,
+          ),
         ),
       );
       return;
@@ -290,7 +295,9 @@ class _DriverHomeState extends State<DriverHome> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             placeHolder(height: 24, width: 140),
-            const SizedBox(height: 8,),
+            const SizedBox(
+              height: 8,
+            ),
             placeHolder(height: 16, width: 80),
           ],
         ),
@@ -372,7 +379,7 @@ class _DriverHomeState extends State<DriverHome> {
                   ),
                   WideButton(
                     onSubmitForm: _nextPage,
-                    buttonText: 'Next',
+                    buttonText: 'Start Ride',
                     isDisabled: _selectedRoute == null || _direction == null,
                   ),
                   const SizedBox(

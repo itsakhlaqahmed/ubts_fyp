@@ -39,12 +39,16 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _getMapData(String id) async {
-    var result = await _mapLocationService.fetchLocation(id);
+    try {
+      var result = await _mapLocationService.fetchLocation(id);
 
-    setState(() {
-      _currentLocation = LatLng(result!['latitude']!, result['longitude']);
-    });
-    await _getAddress(_currentLocation!);
+      setState(() {
+        _currentLocation = LatLng(result!['latitude']!, result['longitude']);
+      });
+      await _getAddress(_currentLocation!);
+    } catch (err) {
+      //
+    }
   }
 
   Future<void> _getAddress(LatLng position) async {
@@ -196,7 +200,8 @@ class _HomeState extends State<Home> {
           animSpeedFactor: 2,
           height: 200,
           backgroundColor: const Color.fromARGB(255, 253, 129, 59),
-          color: const Color.fromARGB(100, 249, 181, 142), // const Color.fromARGB(141, 244, 174, 134),
+          color: const Color.fromARGB(
+              100, 249, 181, 142), // const Color.fromARGB(141, 244, 174, 134),
           showChildOpacityTransition: false,
           onRefresh: () async {
             Future.delayed(const Duration(seconds: 1), () {
