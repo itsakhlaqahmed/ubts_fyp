@@ -29,7 +29,7 @@ class WideButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             color: isDisabled ?? false
                 ? const Color.fromARGB(110, 253, 130, 59)
-                : const Color.fromARGB(255, 253, 129, 59),
+                : Color(0xFFFD813B),
             gradient: isDisabled ?? false
                 ? null
                 : const LinearGradient(

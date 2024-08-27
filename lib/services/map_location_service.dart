@@ -118,11 +118,11 @@ class MapLocationService {
     return null;
   } // end fetchLocation
 
-  Future<dynamic> getPolyline(String route) async {
+  Future<Map<String, dynamic>> getPolyline(String route) async {
     Uri url = Uri.parse('$_databaseUrl/Routes/$route.json');
     final response = await http.get(url);
 
-    final data = json.decode(response.body);
+    Map<String, dynamic> data = json.decode(response.body);
     return data;
   }
 

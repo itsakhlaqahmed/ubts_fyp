@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubts_fyp/models/user.dart';
 import 'package:ubts_fyp/pages/success.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
@@ -29,6 +30,18 @@ class _SignupPageState extends State<SignupPage> {
     BusStop(from: 'Saddar Town', to: 'Nazimabad'),
     BusStop(from: 'Baldia Town', to: 'Steel'),
   ];
+
+  @override
+  initState() {
+    super.initState();
+    registerFirstVisit();
+  }
+
+  Future<void> registerFirstVisit() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    sharedPreferences.setBool('hasVisited', true);
+  }
 
   Future<bool?> _clickCreateAccount(Map<UserData, String> formData) async {
     signUpData = {

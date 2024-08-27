@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
@@ -13,7 +14,9 @@ import 'package:ubts_fyp/services/persistant_storage.dart';
 import 'package:ubts_fyp/widgets/home_map_card.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({super.key, this.user});
+
+  final Map<UserData, dynamic>? user;
 
   @override
   State<Home> createState() => _HomeState();
@@ -30,12 +33,19 @@ class _HomeState extends State<Home> {
   final MapLocationService _mapLocationService = MapLocationService();
   LatLng? _currentLocation;
   String? _address;
+  final Set<Polyline> _polylines = {};
+  bool _fullMapEnabled = false;
 
   @override
   initState() {
     _fetchLocalUser();
     super.initState();
     _getMapData(_busId);
+  }
+
+  Future<void> _getRouteStatus(String id) async {
+    // get route/bus data whether it has started and so on
+    
   }
 
   Future<void> _getMapData(String id) async {
@@ -70,6 +80,14 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _fetchLocalUser() async {
+    if (widget.user != null) {
+      setState(() {
+        _userData = widget.user!;
+      });
+      return;
+    }
+    ; // if user is passed while navigating to this page
+
     await Future.delayed(
       const Duration(milliseconds: 500),
     );
@@ -90,6 +108,39 @@ class _HomeState extends State<Home> {
     });
   }
 
+  Future<void> _getPolyline(String route) async {
+    Map<String, dynamic> data = await _mapLocationService.getPolyline(route);
+    List<LatLng> polylineCoordinates = [];
+
+    if (data['status'] == 'OK') {
+      var points = data['routes'][0]['overview_polyline']['points'];
+      // var legs = data['routes'][0]['legs'][0];
+      // setState(() {
+      //   distance = legs['distance']['text'];
+      //   duration = legs['duration']['text'];
+      // });
+
+      List<PointLatLng> result = PolylinePoints().decodePolyline(points);
+      for (var point in result) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      }
+
+      // await _addMarker();
+
+      setState(() {
+        _polylines.add(
+          Polyline(
+            polylineId: const PolylineId('polyline'),
+            visible: true,
+            points: polylineCoordinates,
+            color: const Color.fromARGB(255, 253, 129, 59),
+            width: 6,
+          ),
+        );
+      });
+    }
+  }
+
   void _signOut() async {
     await _authService.signOut();
     await PersistantStorage().deleteLocalUser();
@@ -99,6 +150,29 @@ class _HomeState extends State<Home> {
       MaterialPageRoute(
         builder: (ctx) => const LoginPage(),
       ),
+    );
+  }
+
+  void _exitFullScreen() {
+    setState(() {
+      _fullMapEnabled = false;
+    });
+  }
+
+  void _enableFullScreen() {
+    setState(() {
+      _fullMapEnabled = true;
+    });
+  }
+
+  Widget _getFullScreenMap() {
+    return HomeMapCard(
+      // routeName: widget.busName,
+      routeName: 'widget.busName',
+      currentLocation: _currentLocation!,
+      address: _address,
+      fullMapEnabled: _fullMapEnabled,
+      onExitFullScreen: _exitFullScreen, polylines: _polylines,
     );
   }
 
@@ -194,113 +268,126 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: LiquidPullToRefresh(
-          animSpeedFactor: 2,
-          height: 200,
-          backgroundColor: const Color.fromARGB(255, 253, 129, 59),
-          color: const Color.fromARGB(
-              100, 249, 181, 142), // const Color.fromARGB(141, 244, 174, 134),
-          showChildOpacityTransition: false,
-          onRefresh: () async {
-            Future.delayed(const Duration(seconds: 1), () {
-              // _getMapData(_busId);
-              setState(() {
-                _currentLocation = LatLng(24.828960282034558, 67.0474697314889);
-              });
-            });
-          },
-          child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 8),
-                  _userData[UserData.userId] != null
-                      ? _getTitleBar()
-                      : _getTitleBarSkeleton(),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  _currentLocation != null
-                      ? HomeMapCard(
-                          routeName: 'Gulshan e Hadeed',
-                          currentLocation: _currentLocation!,
-                          address: _address,
-                        )
-                      : _getMapSkeleton(),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Container(
-                      // height: 100,
-                      width: MediaQuery.of(context).size.width,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 10, 25, 37),
-                        borderRadius: BorderRadius.circular(8),
+    late Widget content;
+    if (_userData[UserData.isApproved] == 'false') {
+      // implement not approved ui here
+      content = Container();
+    } else {
+      content = _fullMapEnabled
+          ? _getFullScreenMap()
+          : LiquidPullToRefresh(
+              animSpeedFactor: 2,
+              height: 200,
+              backgroundColor: const Color.fromARGB(255, 253, 129, 59),
+              color: const Color.fromARGB(100, 249, 181,
+                  142), // const Color.fromARGB(141, 244, 174, 134),
+              showChildOpacityTransition: false,
+              onRefresh: () async {
+                Future.delayed(const Duration(seconds: 1), () {
+                  setState(() {
+                    // when pulled down to refrech 
+                    // do fetch current loc here
+                  });
+                });
+              },
+              child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 8),
+                      _userData[UserData.userId] != null
+                          ? _getTitleBar()
+                          : _getTitleBarSkeleton(),
+                      const SizedBox(
+                        height: 8,
                       ),
-                      child: Column(
-                        // mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Driver',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      _currentLocation != null
+                          ? HomeMapCard(
+                              routeName: 'Gulshan e Hadeed',
+                              currentLocation: _currentLocation!,
+                              address: _address,
+                              onClickFullScreen: _enableFullScreen,
+                              polylines: _polylines,
+                            )
+                          : _getMapSkeleton(),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Container(
+                          // height: 100,
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 16),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 10, 25, 37),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          const SizedBox(height: 12),
-                          Row(
+                          child: Column(
+                            // mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                height: 40,
-                                width: 40,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color:
-                                      const Color.fromARGB(162, 139, 176, 205),
+                              const Text(
+                                'Driver',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const SizedBox(width: 12),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              const SizedBox(height: 12),
+                              Row(
                                 children: [
-                                  Text(
-                                    _driverName,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
+                                  Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: const Color.fromARGB(
+                                          162, 139, 176, 205),
+                                    ),
                                   ),
-                                  Text(
-                                    _driverPhone,
-                                    style: const TextStyle(
-                                        fontSize: 12, color: Colors.white),
+                                  const SizedBox(width: 12),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        _driverName,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
+                                      Text(
+                                        _driverPhone,
+                                        style: const TextStyle(
+                                            fontSize: 12, color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  const Icon(
+                                    Icons.arrow_forward_ios_outlined,
+                                    color: Colors.white,
                                   ),
                                 ],
                               ),
-                              const Spacer(),
-                              const Icon(
-                                Icons.arrow_forward_ios_outlined,
-                                color: Colors.white,
-                              ),
+                              const SizedBox(height: 8),
                             ],
                           ),
-                          const SizedBox(height: 8),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ],
-              )),
-        ),
+                    ],
+                  )),
+            );
+    }
+
+    return Scaffold(
+      body: SafeArea(
+        child: content,
       ),
     );
   }

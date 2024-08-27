@@ -66,12 +66,7 @@ class _LoginFormState extends State<LoginForm> {
             UserData.busRoute: response?["busRoute"],
             UserData.busStop: response?["busStop"],
           };
-          if (_userData[UserData.email] == 'sal@gmail.com') {
-            _userData = {
-              ..._userData,
-              UserData.userType: 'driver',
-            };
-          }
+
           await PersistantStorage().persistUserData(_userData);
         });
       }
@@ -80,7 +75,7 @@ class _LoginFormState extends State<LoginForm> {
       CustomSnackBarBuilder().showCustomSnackBar(
         context,
         snackBarType: CustomSnackbar.success,
-        text: 'You have been logged in successfully',
+        text: 'You have successfully logged in',
       );
 
       if (!mounted) return;

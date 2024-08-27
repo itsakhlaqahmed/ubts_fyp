@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -39,8 +40,41 @@ class _StartRidePagetate extends State<DriverMapScreen> {
   LatLng? _currentLocation;
   String? _address;
   Timer? _timer;
-  // bool _locationServiceRunning = false;
   bool _fullMapEnabled = false;
+  final Set<Polyline> _polylines = {};
+
+  Future<void> _getPolyline(String route) async {
+    Map<String, dynamic> data = await _mapLocationService.getPolyline(route);
+    List<LatLng> polylineCoordinates = [];
+
+    if (data['status'] == 'OK') {
+      var points = data['routes'][0]['overview_polyline']['points'];
+      // var legs = data['routes'][0]['legs'][0];
+      // setState(() {
+      //   distance = legs['distance']['text'];
+      //   duration = legs['duration']['text'];
+      // });
+
+      List<PointLatLng> result = PolylinePoints().decodePolyline(points);
+      for (var point in result) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      }
+
+      // await _addMarker();
+
+      setState(() {
+        _polylines.add(
+          Polyline(
+            polylineId: const PolylineId('polyline'),
+            visible: true,
+            points: polylineCoordinates,
+            color: const Color.fromARGB(255, 253, 129, 59),
+            width: 6,
+          ),
+        );
+      });
+    }
+  }
 
   Future<void> _startLiveLocation() async {
     final Map<String, dynamic> driver = {
@@ -86,6 +120,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
   @override
   void initState() {
     _startLiveLocation();
+    _getPolyline(widget.busId);
     super.initState();
   }
 
@@ -255,6 +290,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
       address: _address,
       fullMapEnabled: _fullMapEnabled,
       onExitFullScreen: _exitFullScreen,
+      polylines: _polylines,
     );
   }
 
@@ -263,7 +299,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
     return Scaffold(
       body: SafeArea(
         child: _fullMapEnabled
-            ? _getFullScreenMap()
+            ? _getFullScreenMap() // no need to null check _currentLocation cos fullmap btn will be visible only once location is fetched.
             : LiquidPullToRefresh(
                 animSpeedFactor: 2,
                 height: 200,
@@ -272,8 +308,8 @@ class _StartRidePagetate extends State<DriverMapScreen> {
                     142), // const Color.fromARGB(141, 244, 174, 134),
                 showChildOpacityTransition: false,
                 onRefresh: () async {
-                  Future.delayed(const Duration(seconds: 1), () {
-                    _getLocation();
+                  Future.delayed(const Duration(seconds: 1), () async {
+                    await _getLocation();
                   });
                 },
                 child: SingleChildScrollView(
@@ -295,6 +331,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
                               currentLocation: _currentLocation!,
                               address: _address,
                               onClickFullScreen: _enableFullScreen,
+                              polylines: _polylines,
                             )
                           : _getMapSkeleton(),
                       const SizedBox(

@@ -15,12 +15,12 @@ class Onboarding extends StatefulWidget {
 class _OnboardingState extends State<Onboarding> {
   int _activePageIndex = 0;
   late PageController _pagecontroller;
-  final Future<SharedPreferences> _sharedPreferences =
-      SharedPreferences.getInstance();
+  bool _loading = true;
 
   @override
   void initState() {
     _pagecontroller = PageController(initialPage: 0);
+    checkFirstVisit();
     super.initState();
   }
 
@@ -31,13 +31,17 @@ class _OnboardingState extends State<Onboarding> {
   }
 
   Future<void> checkFirstVisit() async {
-    final prefs = await _sharedPreferences;
-    bool hasVisited = prefs.getBool('hasVisited') ?? false;
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    bool hasVisited = sharedPreferences.getBool('hasVisited') ?? false;
 
     if (hasVisited) {
       navigateToLogin();
       return;
     }
+    setState(() {
+      _loading = false;
+    });
   }
 
   void nextPage() async {
@@ -51,11 +55,7 @@ class _OnboardingState extends State<Onboarding> {
     );
   }
 
-  void navigateToLogin() async {
-    final prefs = await _sharedPreferences;
-    prefs.setBool('hasVisited', true);
-
-    // ignore: use_build_context_synchronously
+  void navigateToLogin() {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => const LoginPage(),
@@ -63,10 +63,7 @@ class _OnboardingState extends State<Onboarding> {
     );
   }
 
-  void navigateToSignup() async {
-    final prefs = await _sharedPreferences;
-    prefs.setBool('hasVisited', true);
-    // ignore: use_build_context_synchronously
+  void navigateToSignup() {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => const SignupPage(),
@@ -74,27 +71,36 @@ class _OnboardingState extends State<Onboarding> {
     );
   }
 
+  Widget _getLoadingWidget() {
+    return const Scaffold(
+      body: Column(
+        children: [],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    checkFirstVisit();
-    return PageView.builder(
-      controller: _pagecontroller,
-      onPageChanged: (index) {
-        setState(() {
-          _activePageIndex = index;
-        });
-      },
-      itemCount: 3,
-      itemBuilder: (BuildContext ctx, index) {
-        return OnboardingScreen(
-          key: ValueKey(index),
-          data: screenData[index],
-          activePageIndex: _activePageIndex,
-          totalScreens: screenData.length,
-          onClickNext: nextPage,
-          onSkip: navigateToSignup,
-        );
-      },
-    );
+    return _loading
+        ? _getLoadingWidget()
+        : PageView.builder(
+            controller: _pagecontroller,
+            onPageChanged: (index) {
+              setState(() {
+                _activePageIndex = index;
+              });
+            },
+            itemCount: 3,
+            itemBuilder: (BuildContext ctx, index) {
+              return OnboardingScreen(
+                key: ValueKey(index),
+                data: screenData[index],
+                activePageIndex: _activePageIndex,
+                totalScreens: screenData.length,
+                onClickNext: nextPage,
+                onSkip: navigateToSignup,
+              );
+            },
+          );
   }
 }
