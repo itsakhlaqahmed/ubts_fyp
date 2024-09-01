@@ -19,6 +19,7 @@ class BusStopPanel extends StatefulWidget {
 class _BusStopPanelState extends State<BusStopPanel> {
   BusStop? _selectedStop;
   bool _error = false;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -198,12 +199,19 @@ class _BusStopPanelState extends State<BusStopPanel> {
               height: 16,
             ),
             WideButton(
-              onSubmitForm: () {
+              isLoading: _isLoading,
+              onSubmitForm: () async{
                 if (_selectedStop != null) {
                   setState(() {
                     _error = false;
+                    _isLoading = true;
                   });
+                  
                   widget.onSelectBusStop(_selectedStop!.toString());
+
+                  setState(() {
+                    _isLoading = false;
+                  });
                 } else {
                   setState(() {
                     _error = true;

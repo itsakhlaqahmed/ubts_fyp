@@ -94,7 +94,6 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _fetchLocalUser() async {
-
     // dont fetch local data if user is given as the widget props
     if (widget.user != null) {
       setState(() {
@@ -286,12 +285,12 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     late Widget content;
-    
-    if ( false
-      // _userData[UserData.isApproved] == 'false'
-    ) {
+
+    if (_userData[UserData.isApproved] == 'false') {
       // implement not approved ui here
-      content = Container();
+      content = const SizedBox(
+        child: Text('Not Approved'),
+      );
     } else {
       content = _fullMapEnabled
           ? _getFullScreenMap()
