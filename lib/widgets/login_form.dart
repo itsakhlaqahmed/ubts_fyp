@@ -43,6 +43,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Future<void> _signInWithEmailAndPassword() async {
+    await AuthService().signOut();
     try {
       setState(() {
         _isLoading = true;
@@ -53,43 +54,70 @@ class _LoginFormState extends State<LoginForm> {
       );
 
       if (user != null) {
-        await FirestoreService()
-            .getUserData(userId: user.uid)
-            .then((response) async {
+        var response = await FirestoreService().getUserData(
+          db: 'users',
+          userId: user.uid,
+        );
+
+        // if data isn't found users collection, try in drivers
+        if (response != null) {
           _userData = {
             UserData.userId: user.uid,
-            UserData.userType: response?["userType"] ?? 'user',
-            UserData.fullName: response?["fullName"],
-            UserData.email: response?["email"],
-            UserData.isApproved: response?["isApproved"],
-            UserData.studentId: response?["studentId"],
-            UserData.busRoute: response?["busRoute"],
-            UserData.busStop: response?["busStop"],
+            UserData.userType: 'user',
+            UserData.fullName: response["fullName"] ?? 'null',
+            UserData.email: response["email"] ?? 'null',
+            UserData.isApproved: response["isApproved"] ?? 'null',
+            UserData.studentId: response["studentId"] ?? 'null',
+            UserData.busRoute: response["busRoute"] ?? 'null',
+            UserData.busStop: response["busStop"] ?? 'null',
+          };
+        } else {
+          response = await FirestoreService().getUserData(
+            db: 'drivers',
+            userId: user.uid,
+          );
+
+          print('******************************');
+          print(user.uid);
+          print(response);
+
+          // acc isn't in drivers collec throw error
+          if (response == null) {
+            await AuthService().currentUser?.delete();
+            throw 'The user doesn\'t exist';
+          }
+
+          // else if found 
+          _userData = {
+            UserData.userId: user.uid,
+            UserData.userType: 'driver',
+            UserData.fullName: response["name"] ?? 'null',
+            UserData.email: response["email"] ?? 'null',
+            UserData.studentId: response["phone"] ?? 'null',
           };
 
-          await PersistantStorage().persistUserData(_userData);
-        });
-      }
+          
+        }
 
-      if (!mounted) return;
-      CustomSnackBarBuilder().showCustomSnackBar(
-        context,
-        snackBarType: CustomSnackbar.success,
-        text: 'You have successfully logged in',
-      );
+        await PersistantStorage().persistUserData(_userData);
+      }
 
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) {
             if (_userData[UserData.userType] == 'driver') {
-              return const DriverHome();
+              return DriverHome(user: _userData);
             }
-            return const Home();
+            return Home(
+              user: _userData,
+            );
           },
         ),
       );
     } catch (err) {
+      print('err 301');
+      print(err);
       CustomSnackBarBuilder().showCustomSnackBar(
         context,
         snackBarType: CustomSnackbar.error,

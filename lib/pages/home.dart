@@ -24,7 +24,15 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final AuthService _authService = AuthService();
-  Map<UserData, dynamic> _userData = {};
+  Map<UserData, dynamic> _userData = {
+    UserData.fullName: 'abc',
+    UserData.email: 'abc',
+    UserData.busRoute: 'abc',
+    UserData.isApproved: 'true',
+    UserData.studentId: 'abc',
+    UserData.userId: 'abc',
+    UserData.userType: 'user',
+  };
   String _busId = 'smiu-hadeed';
   String _driverName = 'Mr. Amjad A';
   String _driverPhone = '0331-3284912';
@@ -38,6 +46,7 @@ class _HomeState extends State<Home> {
 
   @override
   initState() {
+    authenticateUser();
     _fetchLocalUser();
     super.initState();
     _getMapData(_busId);
@@ -45,7 +54,12 @@ class _HomeState extends State<Home> {
 
   Future<void> _getRouteStatus(String id) async {
     // get route/bus data whether it has started and so on
-    
+  }
+
+  void authenticateUser() {
+    if (AuthService().getAuth == null) {
+      _signOut();
+    }
   }
 
   Future<void> _getMapData(String id) async {
@@ -80,13 +94,16 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _fetchLocalUser() async {
+
+    // dont fetch local data if user is given as the widget props
     if (widget.user != null) {
       setState(() {
         _userData = widget.user!;
       });
       return;
     }
-    ; // if user is passed while navigating to this page
+
+    // else fetch user's local data on device
 
     await Future.delayed(
       const Duration(milliseconds: 500),
@@ -269,7 +286,10 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     late Widget content;
-    if (_userData[UserData.isApproved] == 'false') {
+    
+    if ( false
+      // _userData[UserData.isApproved] == 'false'
+    ) {
       // implement not approved ui here
       content = Container();
     } else {
@@ -285,7 +305,7 @@ class _HomeState extends State<Home> {
               onRefresh: () async {
                 Future.delayed(const Duration(seconds: 1), () {
                   setState(() {
-                    // when pulled down to refrech 
+                    // when pulled down to refrech
                     // do fetch current loc here
                   });
                 });

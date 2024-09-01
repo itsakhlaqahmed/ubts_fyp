@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubts_fyp/models/user.dart';
@@ -22,7 +23,7 @@ class _SignupPageState extends State<SignupPage> {
   Map<UserData, String> signUpData = {
     UserData.userType: 'user',
   };
-  int activeFormIndex = 0;
+   int activeFormIndex = 0;
 
   var busStops = const [
     BusStop(from: 'Baldia Town', to: 'Steel Town'),
@@ -43,30 +44,14 @@ class _SignupPageState extends State<SignupPage> {
     sharedPreferences.setBool('hasVisited', true);
   }
 
-  Future<bool?> _clickCreateAccount(Map<UserData, String> formData) async {
-    signUpData = {
-      ...formData,
-      UserData.isApproved: 'false',
-    };
+  // gets data from signup form page
+  Future<void> _getSignupFormData(Map<UserData, String> formData) async {
+    signUpData = {...formData};
 
-    final user = await AuthService().createUserWithEmailAndPassword(
-      email: formData[UserData.email]!,
-      password: formData[UserData.password]!,
-    );
-
-    signUpData.remove(UserData.password);
-
-    if (user != null) {
-      signUpData[UserData.userId] = user.uid;
-
-      setState(() {
-        activeFormIndex = 1;
-      });
-      return true;
-    }
-
-    return null;
-  } // end _clickCreateAccount
+    setState(() {
+      activeFormIndex = 1;
+    });
+  } // end _getSignupFormData
 
   void _selectRoute(String route) {
     signUpData[UserData.busRoute] = route;
@@ -77,53 +62,63 @@ class _SignupPageState extends State<SignupPage> {
 
   void _selectStop(String busStop) async {
     signUpData[UserData.busStop] = busStop;
+    await _createStudentAccount();
+  } // end _selectStop
 
+  Future<void> _createStudentAccount() async {
     try {
-      _saveUserData();
-      if (!mounted) return;
-      CustomSnackBarBuilder().showCustomSnackBar(
-        context,
-        snackBarType: CustomSnackbar.success,
-        text: 'Success',
+      // create firebase auth account
+      User? user = await AuthService().createUserWithEmailAndPassword(
+        email: signUpData[UserData.email]!,
+        password: signUpData[UserData.password]!,
       );
 
+      signUpData[UserData.userId] = user!.uid;
+      signUpData.remove(UserData.password);
+
+      // data sent to firestore db
+      final data = {
+        'fullName': signUpData[UserData.fullName],
+        'email': signUpData[UserData.email],
+        'studentId': signUpData[UserData.studentId],
+        'isApproved': 'false',
+        'busRoute': signUpData[UserData.busRoute],
+        'busStop': signUpData[UserData.busStop],
+        'userType': 'user',
+      };
+
+      // save user data in user collection in firestore
+      await FirestoreService().addUserData(
+        id: signUpData[UserData.userId]!,
+        userData: data,
+      );
+
+      // save user data in local storage
       await PersistantStorage().persistUserData(signUpData);
 
+      // now push accounted creation successfull page
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (ctx) => const SuccessPage(),
         ),
       );
+
+      // below error handling
     } catch (err) {
+      if (!mounted) return;
       CustomSnackBarBuilder().showCustomSnackBar(
         context,
         snackBarType: CustomSnackbar.error,
         text: 'Error id: Signup-90 \n$err ',
       );
     }
-  } // end _selectStop
-
-  Future<void> _saveUserData() async {
-    Map<String, dynamic> data = {
-      'fullName': signUpData[UserData.fullName],
-      'email': signUpData[UserData.email],
-      'studentId': signUpData[UserData.studentId],
-      'busRoute': signUpData[UserData.busRoute],
-      'busStop': signUpData[UserData.busStop],
-      'userType': signUpData[UserData.userType]
-    };
-
-    await FirestoreService().addUserData(
-      id: signUpData[UserData.userId]!,
-      userData: data,
-    );
-  } // end _saveUserData
+  } // end _createStudentAccount
 
   @override
   Widget build(BuildContext context) {
     Widget content = SignupForm(
-      onClickSignup: _clickCreateAccount,
+      onClickSignup: _getSignupFormData,
     );
 
     switch (activeFormIndex) {

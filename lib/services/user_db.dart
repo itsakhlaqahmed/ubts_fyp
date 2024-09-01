@@ -17,9 +17,10 @@ class FirestoreService {
     // handle on success here
   }
 
-  Future<Map<String, dynamic>?> getUserData({required String userId}) async {
+  Future<Map<String, dynamic>?> getUserData({required String db, required String userId}) async {
     DocumentSnapshot<Map<String, dynamic>> snapshot =
-        await _firestore.collection(_userCollection).doc(userId).get();
+        await _firestore.collection(db).doc(userId).get();
+
     return snapshot.data();
   }
 }

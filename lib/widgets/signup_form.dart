@@ -15,7 +15,7 @@ class SignupForm extends StatefulWidget {
     required this.onClickSignup,
   });
 
-  final Future<bool?> Function(Map<UserData, String> formData) onClickSignup;
+  final Future<void> Function(Map<UserData, String> formData) onClickSignup;
 
   @override
   State<StatefulWidget> createState() => _SignupFormState();
@@ -26,7 +26,7 @@ class _SignupFormState extends State<SignupForm> {
   Map<UserData, String> _userData = {};
   bool _isLoading = false;
 
-  Future<void> _clickSignup() async {
+  void _clickSignup() {
     bool validated = _formKey.currentState!.validate();
     if (validated) {
       _formKey.currentState!.save();
@@ -35,23 +35,9 @@ class _SignupFormState extends State<SignupForm> {
           _isLoading = true;
         });
 
-        bool? user = await widget.onClickSignup(_userData);
-
-        if (user != null) {
-          if (!mounted) return;
-          CustomSnackBarBuilder().showCustomSnackBar(
-            context,
-            snackBarType: CustomSnackbar.success,
-            text: 'Account created successfully...',
-          );
-        }
+        widget.onClickSignup(_userData);
       } catch (err) {
-        if (!mounted) return;
-        CustomSnackBarBuilder().showCustomSnackBar(
-          context,
-          snackBarType: CustomSnackbar.error,
-          text: err.toString(),
-        );
+        // handle error here
       }
 
       setState(() {

@@ -9,7 +9,8 @@ import 'package:ubts_fyp/services/persistant_storage.dart';
 import 'package:ubts_fyp/widgets/wide_button.dart';
 
 class DriverHome extends StatefulWidget {
-  const DriverHome({super.key});
+  const DriverHome({super.key, this.user});
+  final Map<UserData, dynamic>? user;
 
   @override
   State<DriverHome> createState() => _DriverHomeState();
@@ -31,8 +32,15 @@ class _DriverHomeState extends State<DriverHome> {
 
   @override
   void initState() {
+    authenticateUser();
     _fetchLocalUser();
     super.initState();
+  }
+
+  void authenticateUser() {
+    if (AuthService().getAuth == null) {
+      _signOut();
+    }
   }
 
   void _nextPage() {
@@ -55,6 +63,16 @@ class _DriverHomeState extends State<DriverHome> {
   }
 
   Future<void> _fetchLocalUser() async {
+    // dont fetch local data if user is given as the widget props
+    if (widget.user != null) {
+      setState(() {
+        _userData = widget.user!;
+      });
+      return;
+    }
+
+    // else fetch user's local data on device
+
     await Future.delayed(
       const Duration(milliseconds: 500),
     );
