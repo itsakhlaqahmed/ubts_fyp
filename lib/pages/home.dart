@@ -11,7 +11,7 @@ import 'package:ubts_fyp/pages/login.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/map_location_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
-import 'package:ubts_fyp/widgets/home_map_card.dart';
+import 'package:ubts_fyp/widgets/home/home_map_card.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key, this.user});
@@ -25,13 +25,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final AuthService _authService = AuthService();
   Map<UserData, dynamic> _userData = {
-    UserData.fullName: 'abc',
-    UserData.email: 'abc',
-    UserData.busRoute: 'abc',
-    UserData.isApproved: 'true',
-    UserData.studentId: 'abc',
-    UserData.userId: 'abc',
-    UserData.userType: 'user',
+    UserData.fullName: 'null',
+    UserData.email: 'null',
+    UserData.busRoute: 'null',
+    UserData.isApproved: 'null',
+    UserData.studentId: 'null',
+    UserData.userId: 'null',
+    UserData.userType: 'null',
   };
   String _busId = 'smiu-hadeed';
   String _driverName = 'Mr. Amjad A';

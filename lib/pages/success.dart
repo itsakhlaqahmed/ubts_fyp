@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ubts_fyp/pages/home.dart';
-import 'package:ubts_fyp/widgets/wide_button.dart';
+import 'package:ubts_fyp/widgets/common/wide_button.dart';
 
 class SuccessPage extends StatelessWidget {
   const SuccessPage({super.key});

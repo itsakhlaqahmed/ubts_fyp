@@ -6,9 +6,9 @@ import 'package:ubts_fyp/pages/home.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
 import 'package:ubts_fyp/services/user_db.dart';
-import 'package:ubts_fyp/widgets/custom_snackbar.dart';
-import 'package:ubts_fyp/widgets/text_field.dart';
-import 'package:ubts_fyp/widgets/wide_button.dart';
+import 'package:ubts_fyp/widgets/common/custom_snackbar.dart';
+import 'package:ubts_fyp/widgets/common/text_field.dart';
+import 'package:ubts_fyp/widgets/common/wide_button.dart';
 // import 'package:ubts/pages/home.dart';
 // import 'package:ubts/services/auth_service.dart';
 

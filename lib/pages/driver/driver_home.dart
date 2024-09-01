@@ -6,7 +6,7 @@ import 'package:ubts_fyp/pages/driver/driver_map_screen.dart';
 import 'package:ubts_fyp/pages/login.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
-import 'package:ubts_fyp/widgets/wide_button.dart';
+import 'package:ubts_fyp/widgets/common/wide_button.dart';
 
 class DriverHome extends StatefulWidget {
   const DriverHome({super.key, this.user});

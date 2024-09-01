@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ubts_fyp/widgets/wide_button.dart';
+import 'package:ubts_fyp/widgets/common/wide_button.dart';
 
 class HomeMapCard extends StatefulWidget {
   const HomeMapCard({

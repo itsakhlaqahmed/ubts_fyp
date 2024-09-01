@@ -5,10 +5,10 @@ import 'package:ubts_fyp/models/user.dart';
 import 'package:ubts_fyp/pages/success.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
-import 'package:ubts_fyp/widgets/bus_route.dart';
-import 'package:ubts_fyp/widgets/bus_stop.dart';
-import 'package:ubts_fyp/widgets/custom_snackbar.dart';
-import 'package:ubts_fyp/widgets/signup_form.dart';
+import 'package:ubts_fyp/widgets/signup/bus_route.dart';
+import 'package:ubts_fyp/widgets/signup/bus_stop.dart';
+import 'package:ubts_fyp/widgets/common/custom_snackbar.dart';
+import 'package:ubts_fyp/widgets/signup/signup_form.dart';
 import 'package:ubts_fyp/models/bus_stop.dart';
 import 'package:ubts_fyp/services/user_db.dart';
 

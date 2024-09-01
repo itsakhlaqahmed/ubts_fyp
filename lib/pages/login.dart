@@ -1,29 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:ubts_fyp/models/user.dart';
+import 'package:ubts_fyp/pages/driver/driver_home.dart';
 import 'package:ubts_fyp/pages/home.dart';
 import 'package:ubts_fyp/pages/signup.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
-import 'package:ubts_fyp/widgets/login_form.dart';
+import 'package:ubts_fyp/services/persistant_storage.dart';
+import 'package:ubts_fyp/widgets/login/login_form.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      var isAuth = AuthService().currentUser;
+  State<LoginPage> createState() => _LoginPageState();
+}
 
-      if (isAuth != null) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (ctx) => const Home(),
-          ),
-        );
-      }
-    });
+class _LoginPageState extends State<LoginPage> {
+  @override
+  initState() {
+    isAuth();
+    super.initState();
+  }
+
+  Future<void> isAuth() async {
+    // SchedulerBinding.instance.addPostFrameCallback((_) {
+    var user = AuthService().currentUser;
+
+    final localData = await PersistantStorage().fetchLocalUser();
+
+    if (user != null && localData[UserData.userType] != null) {
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (ctx) {
+            return localData[UserData.userType] == 'driver'
+                ? const DriverHome()
+                : const Home();
+          },
+        ),
+      );
+    }
+    // });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Padding(

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ubts_fyp/models/user.dart';
 import 'package:ubts_fyp/pages/login.dart';
-import 'package:ubts_fyp/widgets/custom_snackbar.dart';
+import 'package:ubts_fyp/widgets/common/custom_snackbar.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:ubts_fyp/widgets/text_field.dart';
-import 'package:ubts_fyp/widgets/wide_button.dart';
+import 'package:ubts_fyp/widgets/common/text_field.dart';
+import 'package:ubts_fyp/widgets/common/wide_button.dart';
 
 // AIzaSyCUccOgqZ2hXFluNq5lQMDolyt7wWFiDfs
 

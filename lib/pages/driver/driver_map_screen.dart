@@ -12,7 +12,7 @@ import 'package:ubts_fyp/pages/login.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/map_location_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
-import 'package:ubts_fyp/widgets/home_map_card.dart';
+import 'package:ubts_fyp/widgets/home/home_map_card.dart';
 
 class DriverMapScreen extends StatefulWidget {
   const DriverMapScreen({
