@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ubts_fyp/pages/driver/driver_home.dart';
-import 'package:ubts_fyp/pages/driver/driver_map_screen.dart';
 import 'package:ubts_fyp/pages/onboarding.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';

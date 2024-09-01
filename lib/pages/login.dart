@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ubts_fyp/models/user.dart';
 import 'package:ubts_fyp/pages/driver/driver_home.dart';
