@@ -12,6 +12,7 @@ import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/map_location_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
 import 'package:ubts_fyp/widgets/home/home_map_card.dart';
+import 'package:ubts_fyp/widgets/home/not_approved.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key, this.user});
@@ -286,10 +287,17 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     late Widget content;
 
-    if (_userData[UserData.isApproved] == 'false') {
+    if (_userData[UserData.isApproved] != ') {
       // implement not approved ui here
-      content = const SizedBox(
-        child: Text('Not Approved'),
+      content = Column(
+        children: [
+          const SizedBox(height: 8),
+          _userData[UserData.userId] != null
+              ? _getTitleBar()
+              : _getTitleBarSkeleton(),
+          const SizedBox(height: 12),
+          const NotApproved(),
+        ],
       );
     } else {
       content = _fullMapEnabled
