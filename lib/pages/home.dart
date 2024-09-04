@@ -287,7 +287,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     late Widget content;
 
-    if (_userData[UserData.isApproved] != ') {
+    if (_userData[UserData.isApproved] != 'true') {
       // implement not approved ui here
       content = Column(
         children: [
