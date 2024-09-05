@@ -47,15 +47,16 @@ class MapLocationService {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
+      print(data);
       final rideStatus = data['rideStatus'];
-      final routeName = data['routeName'];
       final Map<String, dynamic> locations = data['locations'];
       return BusRide(
-          routeName: routeName,
-          rideStatus: rideStatus,
-          locations: locations,
-          driverName: data['driver']['name'],
-          driverPhone: data['driver']['phone']);
+        routeName: busId,
+        rideStatus: rideStatus,
+        locations: locations,
+        driverName: data['driver']['name'],
+        // driverPhone: data['driver']['phone'],
+      );
     } else {}
 
     return null;
@@ -107,15 +108,16 @@ class MapLocationService {
   Future<Map<String, dynamic>?> fetchLocation(String busId,
       {Function? onRideEnd}) async {
     // final url = Uri.parse('$_databaseUrl/Buses/$busId/locations.json'); real one
-    final url = Uri.parse('$_databaseUrl/$busId.json');
+    final url = Uri.parse('$_databaseUrl/Buses/$busId.json');
     final response = await http.get(url);
-
+    print(response.body);
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       final Map<String, dynamic> locations = data['locations'];
       final Map<String, dynamic> latestLocation = locations.entries.last
           .value; // last value is the latest, of type {'latitude': 343, 'longitude': 42}
-      print(latestLocation);
+      print('latest location ========================' +
+          latestLocation.toString());
       if (data['rideStatus'] == 'ended') {
         if (onRideEnd != null) onRideEnd();
       }

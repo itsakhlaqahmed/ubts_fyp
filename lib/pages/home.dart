@@ -51,7 +51,7 @@ class _HomeState extends State<Home> {
   initState() {
     authenticateUser();
     _fetchLocalUser();
-    _getBusStatus(_userData[UserData.busRoute]);
+    // _getBusStatus(_userData[UserData.busRoute]);
     super.initState();
     // _getMapData(_busId);
   }
@@ -64,24 +64,33 @@ class _HomeState extends State<Home> {
 
   Future<void> _getBusStatus(String busId) async {
     // get route/bus data whether it has started and so on
-    final busData = await _mapLocationService.fetchBus(busId);
-    if (busData != null && busData.rideStatus == 'started') {
-      setState(() {
-        _hasRideStarted = true;
-        _driverName = busData.driverName!;
-        _driverPhone = busData.driverPhone;
-      });
+    try {
+      print(busId);
+      final busData = await _mapLocationService.fetchBus(busId);
+      print(
+          'busData?.rideStatus *********************************************88');
+      print(busData?.rideStatus);
+      if (busData != null && busData.rideStatus == 'started') {
+        setState(() {
+          _hasRideStarted = true;
+          _driverName = busData.driverName!;
+          _driverPhone = busData.driverPhone;
+        });
+      }
+      await _startFetchingLocation();
+    } catch (err) {
+      print(err.toString());
     }
-    await _startFetchingLocation();
   }
 
   Future<void> _startFetchingLocation() async {
+    _endFetchingLocation();
     try {
       // then after every x seconds
 
       _fetchLatestLocation();
       await _getAddress(_currentLocation!);
-      _timer = Timer.periodic(const Duration(seconds: 5), (_) async {
+      _timer = Timer.periodic(const Duration(seconds: 3), (_) async {
         if (_hasRideStarted) {
           _fetchLatestLocation();
           await _getAddress(_currentLocation!);
@@ -112,21 +121,6 @@ class _HomeState extends State<Home> {
       _currentLocation =
           LatLng(latestLocation!['latitude'], latestLocation['longitude']);
     });
-  }
-
-  Future<void> _getMapData(String id) async {
-    if (_hasRideStarted) {
-      try {
-        var result = await _mapLocationService.fetchLocation(id);
-
-        setState(() {
-          _currentLocation = LatLng(result!['latitude']!, result['longitude']);
-        });
-        await _getAddress(_currentLocation!);
-      } catch (err) {
-        //
-      }
-    }
   }
 
   Future<void> _getAddress(LatLng position) async {
