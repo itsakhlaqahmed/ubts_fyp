@@ -79,14 +79,14 @@ class _StartRidePagetate extends State<DriverMapScreen> {
   Future<void> _startLiveLocation() async {
     final Map<String, dynamic> driver = {
       'name': widget.userData[UserData.fullName],
-      // 'phone': widget.
+      'phone': widget.userData[UserData.studentId],
     };
     // setState(() {
     //   _locationServiceRunning = true;
     // });
 
     try {
-      // get location for the first time
+      // get device location for the first time
       await _getLocation();
       await _mapLocationService.startRide(
         busId: widget.busId,

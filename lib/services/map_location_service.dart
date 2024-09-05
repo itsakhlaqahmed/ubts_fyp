@@ -8,11 +8,15 @@ class BusRide {
     required this.routeName,
     required this.rideStatus,
     required this.locations,
+    this.driverName,
+    this.driverPhone,
   });
 
   final String routeName;
   final String rideStatus;
   final Map<String, dynamic> locations;
+  final String? driverName;
+  final String? driverPhone;
 }
 
 class MapLocationService {
@@ -47,10 +51,11 @@ class MapLocationService {
       final routeName = data['routeName'];
       final Map<String, dynamic> locations = data['locations'];
       return BusRide(
-        routeName: routeName,
-        rideStatus: rideStatus,
-        locations: locations,
-      );
+          routeName: routeName,
+          rideStatus: rideStatus,
+          locations: locations,
+          driverName: data['driver']['name'],
+          driverPhone: data['driver']['phone']);
     } else {}
 
     return null;
@@ -99,16 +104,21 @@ class MapLocationService {
   }
 
   // get the latest location for a bus id
-  Future<Map<String, dynamic>?> fetchLocation(String busId) async {
+  Future<Map<String, dynamic>?> fetchLocation(String busId,
+      {Function? onRideEnd}) async {
     // final url = Uri.parse('$_databaseUrl/Buses/$busId/locations.json'); real one
-    final url = Uri.parse('$_databaseUrl/locations.json');
+    final url = Uri.parse('$_databaseUrl/$busId.json');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
-      final Map<String, dynamic> latestLocation =
-          data.entries.last.value; // last value is the latest
+      final Map<String, dynamic> locations = data['locations'];
+      final Map<String, dynamic> latestLocation = locations.entries.last
+          .value; // last value is the latest, of type {'latitude': 343, 'longitude': 42}
       print(latestLocation);
+      if (data['rideStatus'] == 'ended') {
+        if (onRideEnd != null) onRideEnd();
+      }
       return latestLocation;
     } else {
       print(response.statusCode);

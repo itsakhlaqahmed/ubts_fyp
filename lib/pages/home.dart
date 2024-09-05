@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
@@ -34,9 +33,11 @@ class _HomeState extends State<Home> {
     UserData.userId: 'null',
     UserData.userType: 'null',
   };
-  String _busId = 'smiu-hadeed';
-  String _driverName = 'Mr. Amjad A';
-  String _driverPhone = '0331-3284912';
+  // String _busId = 'smiu-hadeed';
+  String _driverName = 'null';
+  String? _driverPhone;
+  bool _hasRideStarted = false;
+  bool _hasRideEnded = false;
 
   // map widget data
   final MapLocationService _mapLocationService = MapLocationService();
@@ -44,17 +45,15 @@ class _HomeState extends State<Home> {
   String? _address;
   final Set<Polyline> _polylines = {};
   bool _fullMapEnabled = false;
+  Timer? _timer;
 
   @override
   initState() {
     authenticateUser();
     _fetchLocalUser();
+    _getBusStatus(_userData[UserData.busRoute]);
     super.initState();
-    _getMapData(_busId);
-  }
-
-  Future<void> _getRouteStatus(String id) async {
-    // get route/bus data whether it has started and so on
+    // _getMapData(_busId);
   }
 
   void authenticateUser() {
@@ -63,34 +62,90 @@ class _HomeState extends State<Home> {
     }
   }
 
-  Future<void> _getMapData(String id) async {
-    try {
-      var result = await _mapLocationService.fetchLocation(id);
-
+  Future<void> _getBusStatus(String busId) async {
+    // get route/bus data whether it has started and so on
+    final busData = await _mapLocationService.fetchBus(busId);
+    if (busData != null && busData.rideStatus == 'started') {
       setState(() {
-        _currentLocation = LatLng(result!['latitude']!, result['longitude']);
+        _hasRideStarted = true;
+        _driverName = busData.driverName!;
+        _driverPhone = busData.driverPhone;
       });
+    }
+    await _startFetchingLocation();
+  }
+
+  Future<void> _startFetchingLocation() async {
+    try {
+      // then after every x seconds
+
+      _fetchLatestLocation();
       await _getAddress(_currentLocation!);
+      _timer = Timer.periodic(const Duration(seconds: 5), (_) async {
+        if (_hasRideStarted) {
+          _fetchLatestLocation();
+          await _getAddress(_currentLocation!);
+        } else {
+          _endFetchingLocation();
+        }
+      });
     } catch (err) {
-      //
+      // print(err.toString() + '**************************');
+    }
+  }
+
+  Future<void> _endFetchingLocation() async {
+    _timer?.cancel();
+  }
+
+  Future<void> handleBusRideEnded() async {
+    setState(() {
+      _hasRideEnded = true;
+    });
+  }
+
+  Future<void> _fetchLatestLocation() async {
+    final latestLocation = await _mapLocationService.fetchLocation(
+      _userData[UserData.busRoute],
+    );
+    setState(() {
+      _currentLocation =
+          LatLng(latestLocation!['latitude'], latestLocation['longitude']);
+    });
+  }
+
+  Future<void> _getMapData(String id) async {
+    if (_hasRideStarted) {
+      try {
+        var result = await _mapLocationService.fetchLocation(id);
+
+        setState(() {
+          _currentLocation = LatLng(result!['latitude']!, result['longitude']);
+        });
+        await _getAddress(_currentLocation!);
+      } catch (err) {
+        //
+      }
     }
   }
 
   Future<void> _getAddress(LatLng position) async {
-    try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        // position.latitude,
-        // position.longitude,
-        24.830272953082, 67.05506649966024,
-      );
+    if (_hasRideStarted) {
+      try {
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+          // position.latitude,
+          // position.longitude,
+          24.830272953082, 67.05506649966024,
+        );
 
-      Placemark place = placemarks[0];
+        Placemark place = placemarks[0];
 
-      setState(() {
-        _address = '${place.thoroughfare}, ${place.subLocality}';
-      });
-    } catch (e) {
-      print(e);
+        setState(() {
+          _address = '${place.thoroughfare}, ${place.subLocality}';
+        });
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
@@ -125,8 +180,8 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Future<void> _getPolyline(String route) async {
-    Map<String, dynamic> data = await _mapLocationService.getPolyline(route);
+  Future<void> _getPolyline(String busId) async {
+    Map<String, dynamic> data = await _mapLocationService.getPolyline(busId);
     List<LatLng> polylineCoordinates = [];
 
     if (data['status'] == 'OK') {
@@ -311,10 +366,7 @@ class _HomeState extends State<Home> {
               showChildOpacityTransition: false,
               onRefresh: () async {
                 Future.delayed(const Duration(seconds: 1), () {
-                  setState(() {
-                    // when pulled down to refrech
-                    // do fetch current loc here
-                  });
+                  _getBusStatus(_userData[UserData.busRoute]);
                 });
               },
               child: SingleChildScrollView(
@@ -389,7 +441,7 @@ class _HomeState extends State<Home> {
                                             color: Colors.white),
                                       ),
                                       Text(
-                                        _driverPhone,
+                                        _driverPhone ?? '03XX-XXXXXXX',
                                         style: const TextStyle(
                                             fontSize: 12, color: Colors.white),
                                       ),
