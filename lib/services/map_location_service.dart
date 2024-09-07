@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -49,12 +50,11 @@ class MapLocationService {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      print(data);
+      log(data);
       final rideStatus = data['rideStatus'];
       final Map<String, dynamic> locations = data['locations'];
-      print(
-          '____________________________________________________________________________');
-      print(data['driver']['phone']);
+      log('____________________________________________________________________________');
+      log(data['driver']['phone']);
 
       return BusRide(
         routeName: busId,
@@ -78,10 +78,10 @@ class MapLocationService {
     );
 
     if (response.statusCode == 200) {
-      print('location send succes');
+      log('location send succes');
       return true;
     } else {
-      print('location send failed');
+      log('location send failed');
     }
 
     return false;
@@ -107,7 +107,7 @@ class MapLocationService {
       body: json.encode(body),
     );
 
-    // print(response.body.toString() + '************************************8');
+    // log(response.body.toString() + '************************************8');
   }
 
   // get the latest location for a bus id
@@ -116,20 +116,19 @@ class MapLocationService {
     // final url = Uri.parse('$_databaseUrl/Buses/$busId/locations.json'); real one
     final url = Uri.parse('$_databaseUrl/Buses/$busId.json');
     final response = await http.get(url);
-    print(response.body);
+    log(response.body);
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       final Map<String, dynamic> locations = data['locations'];
       final Map<String, dynamic> latestLocation = locations.entries.last
           .value; // last value is the latest, of type {'latitude': 343, 'longitude': 42}
-      print('latest location ========================' +
-          latestLocation.toString());
+      log('latest location ======================== $latestLocation');
       if (data['rideStatus'] == 'ended') {
         if (onRideEnd != null) onRideEnd();
       }
       return latestLocation;
     } else {
-      print(response.statusCode);
+      log(response.statusCode.toString());
     }
 
     return null;
@@ -161,15 +160,15 @@ class MapLocationService {
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      print('data fetch success $num');
+      log('data fetch success $num');
 
       final Map<String, dynamic> data = json.decode(response.body);
       final Map<String, dynamic> latestLocation =
           data.entries.elementAt(num).value; // last value is the latest
-      print("latest location ****************** " + latestLocation.toString());
+      log("latest location ****************** $latestLocation");
       return latestLocation;
     } else {
-      print(response.statusCode);
+      log(response.statusCode.toString());
     }
 
     return null;

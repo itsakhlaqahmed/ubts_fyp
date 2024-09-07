@@ -147,7 +147,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
         _address = '${place.thoroughfare} ${place.subLocality}';
       });
     } catch (e) {
-      print(e);
+      // print(e);
     }
   } // end _getAddress
 

@@ -17,12 +17,14 @@ class HomeMapCard extends StatefulWidget {
     this.onExitFullScreen,
     this.onClickFullScreen,
     this.initialPosition,
-    required this.polylines,
+    this.markers,
+    this.polylines,
   });
 
   final String routeName;
   final LatLng currentLocation;
-  final Set<Polyline> polylines;
+  final Set<Polyline>? polylines;
+  final Set<Marker>? markers;
   final LatLng? initialPosition;
   final String? address;
   final bool? fullMapEnabled;
@@ -91,7 +93,7 @@ class _HomeMapCardState extends State<HomeMapCard> {
         target: widget.currentLocation,
         zoom: 17,
       ),
-      polylines: widget.polylines,
+      polylines: widget.polylines ?? {},
       circles: {
         // _circle,
         Circle(
@@ -103,6 +105,7 @@ class _HomeMapCardState extends State<HomeMapCard> {
           strokeWidth: 30,
         )
       },
+      markers: widget.markers ?? {},
     );
   }
 

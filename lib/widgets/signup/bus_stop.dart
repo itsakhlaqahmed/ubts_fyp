@@ -82,7 +82,7 @@ class _BusStopPanelState extends State<BusStopPanel> {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? Color.fromARGB(56, 254, 150, 90)
+                            ? const Color.fromARGB(56, 254, 150, 90)
                             : Colors.white,
                         border: Border.all(
                           color: isSelected

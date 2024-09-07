@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ubts_fyp/models/user.dart';
@@ -77,9 +79,9 @@ class _LoginFormState extends State<LoginForm> {
             userId: user.uid,
           );
 
-          print('******************************');
-          print(user.uid);
-          print(response);
+          log('******************************');
+          log(user.uid);
+          log(response.toString());
 
           // acc isn't in drivers collec throw error
           if (response == null) {
@@ -87,7 +89,7 @@ class _LoginFormState extends State<LoginForm> {
             throw 'The user doesn\'t exist';
           }
 
-          // else if found 
+          // else if found
           _userData = {
             UserData.userId: user.uid,
             UserData.userType: 'driver',
@@ -95,8 +97,6 @@ class _LoginFormState extends State<LoginForm> {
             UserData.email: response["email"] ?? 'null',
             UserData.studentId: response["phone"] ?? 'null',
           };
-
-          
         }
 
         await PersistantStorage().persistUserData(_userData);
@@ -116,8 +116,9 @@ class _LoginFormState extends State<LoginForm> {
         ),
       );
     } catch (err) {
-      print('err 301');
-      print(err);
+      log('err 301');
+      log(err.toString());
+      if (!mounted) return;
       CustomSnackBarBuilder().showCustomSnackBar(
         context,
         snackBarType: CustomSnackbar.error,

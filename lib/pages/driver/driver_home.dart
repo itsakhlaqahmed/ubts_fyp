@@ -120,7 +120,7 @@ class _DriverHomeState extends State<DriverHome> {
   Widget _getRouteTile(bool isSelected, String route) {
     return Container(
       clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(),
+      decoration: const BoxDecoration(),
       child: Stack(
         children: [
           Container(

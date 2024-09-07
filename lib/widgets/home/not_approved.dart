@@ -24,7 +24,7 @@ class NotApproved extends StatelessWidget {
             child: Image.asset(
               'assets/clock.gif',
               fit: BoxFit.cover,
-              color: Color.fromARGB(54, 248, 235, 228),
+              color: const Color.fromARGB(54, 248, 235, 228),
               colorBlendMode: BlendMode.multiply,
             ),
           ),

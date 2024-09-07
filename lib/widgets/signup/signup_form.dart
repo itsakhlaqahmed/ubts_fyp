@@ -22,7 +22,7 @@ class SignupForm extends StatefulWidget {
 
 class _SignupFormState extends State<SignupForm> {
   final _formKey = GlobalKey<FormState>();
-  Map<UserData, String> _userData = {};
+  final Map<UserData, String> _userData = {};
   bool _isLoading = false;
 
   void _clickSignup() {

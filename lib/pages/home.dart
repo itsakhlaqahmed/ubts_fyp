@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -58,7 +59,6 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _timer?.cancel();
   }
@@ -72,11 +72,11 @@ class _HomeState extends State<Home> {
   Future<void> _getBusStatus(String busId) async {
     // get route/bus data whether it has started and so on
     try {
-      print(busId);
+      // log(busId);
       final busData = await _mapLocationService.fetchBus(busId);
-      print(
-          'busData?.rideStatus *********************************************88');
-      print(busData?.rideStatus);
+      // log(
+      //     'busData?.rideStatus *********************************************88');
+      // log(busData?.rideStatus);
       if (busData != null && busData.rideStatus == 'started') {
         setState(() {
           _hasRideStarted = true;
@@ -86,7 +86,7 @@ class _HomeState extends State<Home> {
       }
       await _startFetchingLocation();
     } catch (err) {
-      print(err.toString());
+      log(err.toString());
     }
   }
 
@@ -116,7 +116,7 @@ class _HomeState extends State<Home> {
         }
       });
     } catch (err) {
-      // print(err.toString() + '**************************');
+      // log(err.toString() + '**************************');
     }
   }
 
@@ -153,7 +153,7 @@ class _HomeState extends State<Home> {
           _address = '${place.thoroughfare}, ${place.subLocality}';
         });
       } catch (e) {
-        print(e);
+        // log(e);
       }
     }
   }

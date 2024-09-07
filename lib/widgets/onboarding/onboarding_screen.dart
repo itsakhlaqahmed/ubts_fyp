@@ -126,7 +126,7 @@ class OnboardingScreen extends StatelessWidget {
             width: i == index ? 24 : 12,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
-              color: i == index ? Color.fromARGB(255, 238, 144, 112) : Color.fromARGB(255, 247, 161, 133) ,
+              color: i == index ? const Color.fromARGB(255, 238, 144, 112) : const Color.fromARGB(255, 247, 161, 133) ,
             ),
           ),
       ],
