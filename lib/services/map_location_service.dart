@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class BusRide {
   BusRide({
@@ -50,12 +52,16 @@ class MapLocationService {
       print(data);
       final rideStatus = data['rideStatus'];
       final Map<String, dynamic> locations = data['locations'];
+      print(
+          '____________________________________________________________________________');
+      print(data['driver']['phone']);
+
       return BusRide(
         routeName: busId,
         rideStatus: rideStatus,
         locations: locations,
         driverName: data['driver']['name'],
-        // driverPhone: data['driver']['phone'],
+        driverPhone: data['driver']['phone'],
       );
     } else {}
 
@@ -129,12 +135,22 @@ class MapLocationService {
     return null;
   } // end fetchLocation
 
-  Future<Map<String, dynamic>> getPolyline(String route) async {
+  Future<List<LatLng>> getPolyline(String route) async {
     Uri url = Uri.parse('$_databaseUrl/Routes/$route.json');
     final response = await http.get(url);
 
     Map<String, dynamic> data = json.decode(response.body);
-    return data;
+    List<LatLng> polylineCoordinates = [];
+
+    if (data['status'] == 'OK') {
+      var points = data['routes'][0]['overview_polyline']['points'];
+
+      List<PointLatLng> result = PolylinePoints().decodePolyline(points);
+      for (var point in result) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      }
+    }
+    return polylineCoordinates;
   }
 
   // start sending data after an interval

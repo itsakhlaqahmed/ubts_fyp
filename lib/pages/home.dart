@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
@@ -46,6 +45,7 @@ class _HomeState extends State<Home> {
   final Set<Polyline> _polylines = {};
   bool _fullMapEnabled = false;
   Timer? _timer;
+  LatLng? initialPosition;
 
   @override
   initState() {
@@ -54,6 +54,13 @@ class _HomeState extends State<Home> {
     // _getBusStatus(_userData[UserData.busRoute]);
     super.initState();
     // _getMapData(_busId);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _timer?.cancel();
   }
 
   void authenticateUser() {
@@ -74,7 +81,7 @@ class _HomeState extends State<Home> {
         setState(() {
           _hasRideStarted = true;
           _driverName = busData.driverName!;
-          _driverPhone = busData.driverPhone;
+          _driverPhone = busData.driverPhone ?? 'null';
         });
       }
       await _startFetchingLocation();
@@ -87,13 +94,23 @@ class _HomeState extends State<Home> {
     _endFetchingLocation();
     try {
       // then after every x seconds
+      final latestLocation = await _fetchLatestLocation();
+      setState(() {
+        _currentLocation = latestLocation;
+        initialPosition = latestLocation;
+      });
 
-      _fetchLatestLocation();
+      await _getPolyline(
+        _userData[UserData.busRoute],
+      );
       await _getAddress(_currentLocation!);
       _timer = Timer.periodic(const Duration(seconds: 3), (_) async {
         if (_hasRideStarted) {
-          _fetchLatestLocation();
-          await _getAddress(_currentLocation!);
+          final newPosition = await _fetchLatestLocation();
+          setState(() {
+            _currentLocation = newPosition;
+          });
+          await _getAddress(newPosition);
         } else {
           _endFetchingLocation();
         }
@@ -113,14 +130,12 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Future<void> _fetchLatestLocation() async {
-    final latestLocation = await _mapLocationService.fetchLocation(
+  Future<LatLng> _fetchLatestLocation() async {
+    final response = await _mapLocationService.fetchLocation(
       _userData[UserData.busRoute],
     );
-    setState(() {
-      _currentLocation =
-          LatLng(latestLocation!['latitude'], latestLocation['longitude']);
-    });
+
+    return LatLng(response!['latitude'], response['longitude']);
   }
 
   Future<void> _getAddress(LatLng position) async {
@@ -175,36 +190,19 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _getPolyline(String busId) async {
-    Map<String, dynamic> data = await _mapLocationService.getPolyline(busId);
-    List<LatLng> polylineCoordinates = [];
+    final polylineCoordinates = await _mapLocationService.getPolyline(busId);
 
-    if (data['status'] == 'OK') {
-      var points = data['routes'][0]['overview_polyline']['points'];
-      // var legs = data['routes'][0]['legs'][0];
-      // setState(() {
-      //   distance = legs['distance']['text'];
-      //   duration = legs['duration']['text'];
-      // });
-
-      List<PointLatLng> result = PolylinePoints().decodePolyline(points);
-      for (var point in result) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      }
-
-      // await _addMarker();
-
-      setState(() {
-        _polylines.add(
-          Polyline(
-            polylineId: const PolylineId('polyline'),
-            visible: true,
-            points: polylineCoordinates,
-            color: const Color.fromARGB(255, 253, 129, 59),
-            width: 6,
-          ),
-        );
-      });
-    }
+    setState(() {
+      _polylines.add(
+        Polyline(
+          polylineId: const PolylineId('polyline'),
+          visible: true,
+          points: polylineCoordinates,
+          color: const Color.fromARGB(255, 253, 129, 59),
+          width: 6,
+        ),
+      );
+    });
   }
 
   void _signOut() async {
@@ -239,6 +237,7 @@ class _HomeState extends State<Home> {
       address: _address,
       fullMapEnabled: _fullMapEnabled,
       onExitFullScreen: _exitFullScreen, polylines: _polylines,
+      initialPosition: initialPosition,
     );
   }
 
@@ -383,6 +382,7 @@ class _HomeState extends State<Home> {
                               address: _address,
                               onClickFullScreen: _enableFullScreen,
                               polylines: _polylines,
+                              initialPosition: initialPosition,
                             )
                           : _getMapSkeleton(),
                       const SizedBox(

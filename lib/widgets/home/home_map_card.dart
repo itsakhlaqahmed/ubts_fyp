@@ -16,12 +16,14 @@ class HomeMapCard extends StatefulWidget {
     this.fullMapEnabled,
     this.onExitFullScreen,
     this.onClickFullScreen,
+    this.initialPosition,
     required this.polylines,
   });
 
   final String routeName;
   final LatLng currentLocation;
   final Set<Polyline> polylines;
+  final LatLng? initialPosition;
   final String? address;
   final bool? fullMapEnabled;
   final Function? onExitFullScreen;
@@ -33,16 +35,42 @@ class HomeMapCard extends StatefulWidget {
 
 class _HomeMapCardState extends State<HomeMapCard> {
   final Completer<GoogleMapController> _googleMapController = Completer();
-  bool rideStarted = false;
+  bool rideStarted = true;
+  // late Circle _circle;
+  late LatLng newPosition;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
+    newPosition = widget.currentLocation;
+    // _setCricle();
   }
 
   _moveCam() async {
     GoogleMapController controller = await _googleMapController.future;
     controller.animateCamera(CameraUpdate.newLatLng(widget.currentLocation));
+  }
+
+  // _setCricle() {
+  //   setState(() {
+  //     _circle = Circle(
+  //       circleId: const CircleId('currentLocation'),
+  //       center: widget.currentLocation,
+  //       radius: 20,
+  //       fillColor: Colors.orange,
+  //       strokeColor: const Color.fromARGB(133, 255, 204, 128),
+  //       strokeWidth: 30,
+  //     );
+  //   });
+  // }
+
+  @override
+  void didUpdateWidget(covariant HomeMapCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.currentLocation != oldWidget.currentLocation) {
+      _animateCircleToNewLocation(widget.currentLocation);
+    } else if (true) {}
   }
 
   Widget _getGoogleMap() {
@@ -65,16 +93,44 @@ class _HomeMapCardState extends State<HomeMapCard> {
       ),
       polylines: widget.polylines,
       circles: {
+        // _circle,
         Circle(
           circleId: const CircleId('currentLocation'),
-          center: widget.currentLocation,
+          center: newPosition,
           radius: 20,
           fillColor: Colors.orange,
           strokeColor: const Color.fromARGB(133, 255, 204, 128),
           strokeWidth: 30,
-        ),
+        )
       },
     );
+  }
+
+  void _animateCircleToNewLocation(LatLng newLocation) {
+    // Stop any existing animation
+    _timer?.cancel();
+
+    const int steps = 100;
+    const duration = Duration(milliseconds: 10);
+    final double latStep =
+        (newLocation.latitude - newPosition.latitude) / steps;
+    final double lngStep =
+        (newLocation.longitude - newPosition.longitude) / steps;
+
+    int currentStep = 0;
+    _timer = Timer.periodic(duration, (timer) {
+      setState(() {
+        newPosition = LatLng(
+          newPosition.latitude + latStep,
+          newPosition.longitude + lngStep,
+        );
+      });
+
+      currentStep++;
+      if (currentStep >= steps) {
+        timer.cancel();
+      }
+    });
   }
 
   @override

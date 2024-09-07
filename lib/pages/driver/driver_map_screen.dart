@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -43,37 +42,20 @@ class _StartRidePagetate extends State<DriverMapScreen> {
   bool _fullMapEnabled = false;
   final Set<Polyline> _polylines = {};
 
-  Future<void> _getPolyline(String route) async {
-    Map<String, dynamic> data = await _mapLocationService.getPolyline(route);
-    List<LatLng> polylineCoordinates = [];
+  Future<void> _getPolyline(String busId) async {
+    final polylineCoordinates = await _mapLocationService.getPolyline(busId);
 
-    if (data['status'] == 'OK') {
-      var points = data['routes'][0]['overview_polyline']['points'];
-      // var legs = data['routes'][0]['legs'][0];
-      // setState(() {
-      //   distance = legs['distance']['text'];
-      //   duration = legs['duration']['text'];
-      // });
-
-      List<PointLatLng> result = PolylinePoints().decodePolyline(points);
-      for (var point in result) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      }
-
-      // await _addMarker();
-
-      setState(() {
-        _polylines.add(
-          Polyline(
-            polylineId: const PolylineId('polyline'),
-            visible: true,
-            points: polylineCoordinates,
-            color: const Color.fromARGB(255, 253, 129, 59),
-            width: 6,
-          ),
-        );
-      });
-    }
+    setState(() {
+      _polylines.add(
+        Polyline(
+          polylineId: const PolylineId('polyline'),
+          visible: true,
+          points: polylineCoordinates,
+          color: const Color.fromARGB(255, 253, 129, 59),
+          width: 6,
+        ),
+      );
+    });
   }
 
   Future<void> _startLiveLocation() async {
@@ -88,6 +70,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
     try {
       // get device location for the first time
       await _getLocation();
+      await _getPolyline(widget.busId);
       await _mapLocationService.startRide(
         busId: widget.busId,
         direction: widget.direction,
