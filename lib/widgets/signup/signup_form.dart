@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ubts_fyp/models/user.dart';
 import 'package:ubts_fyp/pages/login.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:ubts_fyp/widgets/common/color_theme.dart';
 import 'package:ubts_fyp/widgets/common/text_field.dart';
 import 'package:ubts_fyp/widgets/common/wide_button.dart';
 
@@ -199,7 +200,7 @@ class _SignupFormState extends State<SignupForm> {
             child: Text(
               'Already have an account? Login Now',
               style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    color: Colors.orange,
+                    color: ColorTheme.primaryShade1,
                     fontWeight: FontWeight.bold,
                   ),
             ),

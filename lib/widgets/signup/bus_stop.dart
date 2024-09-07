@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ubts_fyp/models/bus_stop.dart';
+import 'package:ubts_fyp/widgets/common/color_theme.dart';
 import 'package:ubts_fyp/widgets/common/wide_button.dart';
 
 class BusStopPanel extends StatefulWidget {
@@ -82,12 +83,10 @@ class _BusStopPanelState extends State<BusStopPanel> {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? const Color.fromARGB(56, 254, 150, 90)
+                            ? ColorTheme.primaryWithOpacity(30)
                             : Colors.white,
                         border: Border.all(
-                          color: isSelected
-                              ? const Color.fromARGB(255, 253, 129, 59)
-                              : Colors.black,
+                          color: isSelected ? ColorTheme.primary : Colors.black,
                         ),
                         borderRadius: BorderRadius.circular(6),
                       ),
@@ -166,8 +165,8 @@ class _BusStopPanelState extends State<BusStopPanel> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: isSelected
-                                      ? const Color.fromARGB(255, 223, 101, 29)
-                                      : const Color.fromARGB(255, 253, 129, 59),
+                                      ? ColorTheme.primaryShade1
+                                      : ColorTheme.primary,
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Center(
@@ -200,13 +199,13 @@ class _BusStopPanelState extends State<BusStopPanel> {
             ),
             WideButton(
               isLoading: _isLoading,
-              onSubmitForm: () async{
+              onSubmitForm: () async {
                 if (_selectedStop != null) {
                   setState(() {
                     _error = false;
                     _isLoading = true;
                   });
-                  
+
                   widget.onSelectBusStop(_selectedStop!.toString());
 
                   setState(() {

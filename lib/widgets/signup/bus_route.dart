@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:ubts_fyp/widgets/common/color_theme.dart';
 import 'package:ubts_fyp/widgets/common/wide_button.dart';
 
 class BusRoutePanel extends StatefulWidget {
@@ -54,13 +55,10 @@ class _BusRoutePanelState extends State<BusRoutePanel> {
       ),
       decoration: BoxDecoration(
         border: Border.all(
-          color: isSelected
-              ? const Color.fromARGB(255, 253, 129, 59)
-              : Colors.black,
+          color: isSelected ? ColorTheme.primary : Colors.black,
         ),
         borderRadius: BorderRadius.circular(6),
-        color:
-            isSelected ? const Color.fromARGB(70, 255, 144, 80) : Colors.white,
+        color: isSelected ? ColorTheme.primaryWithOpacity(30) : Colors.white,
       ),
       child: InkWell(
         onTap: () {

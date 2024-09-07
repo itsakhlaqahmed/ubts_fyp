@@ -6,6 +6,7 @@ import 'package:ubts_fyp/pages/home.dart';
 import 'package:ubts_fyp/pages/signup.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
+import 'package:ubts_fyp/widgets/common/color_theme.dart';
 import 'package:ubts_fyp/widgets/login/login_form.dart';
 
 class LoginPage extends StatefulWidget {
@@ -56,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   fontWeight: FontWeight.w900,
                   fontSize: 40,
-                  color: const Color.fromARGB(255, 253, 129, 59),
+                  color: ColorTheme.primary,
                 ),
           ),
         ),
@@ -119,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text(
                       'Don\'t have an account? Create now!',
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            color: Colors.orange,
+                            color: ColorTheme.primaryShade1,
                             fontWeight: FontWeight.bold,
                           ),
                     ),

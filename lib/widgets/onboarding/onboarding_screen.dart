@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ubts_fyp/widgets/common/color_theme.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({
@@ -92,7 +93,7 @@ class OnboardingScreen extends StatelessWidget {
                             width: 48,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(32),
-                              color:  const Color.fromARGB(255, 253, 129, 59),
+                              color: ColorTheme.primary,
                             ),
                             child: const Icon(
                               Icons.arrow_forward_ios_rounded,
@@ -126,7 +127,9 @@ class OnboardingScreen extends StatelessWidget {
             width: i == index ? 24 : 12,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
-              color: i == index ? const Color.fromARGB(255, 238, 144, 112) : const Color.fromARGB(255, 247, 161, 133) ,
+              color: i == index
+                  ? ColorTheme.primary
+                  : ColorTheme.primaryWithOpacity(60),
             ),
           ),
       ],

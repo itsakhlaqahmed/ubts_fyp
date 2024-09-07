@@ -47,6 +47,7 @@ class _HomeState extends State<Home> {
   bool _fullMapEnabled = false;
   Timer? _timer;
   LatLng? initialPosition;
+  Set<Marker>? _markers;
 
   @override
   initState() {
@@ -199,9 +200,20 @@ class _HomeState extends State<Home> {
           visible: true,
           points: polylineCoordinates,
           color: const Color.fromARGB(255, 253, 129, 59),
+          endCap: Cap.roundCap,
           width: 6,
         ),
       );
+      _markers = {
+        Marker(
+          markerId: const MarkerId('start'),
+          position: polylineCoordinates.first,
+        ),
+        Marker(
+          markerId: const MarkerId('end'),
+          position: polylineCoordinates.last,
+        ),
+      };
     });
   }
 
@@ -236,7 +248,9 @@ class _HomeState extends State<Home> {
       currentLocation: _currentLocation!,
       address: _address,
       fullMapEnabled: _fullMapEnabled,
-      onExitFullScreen: _exitFullScreen, polylines: _polylines,
+      onExitFullScreen: _exitFullScreen,
+      polylines: _polylines,
+      markers: _markers,
       initialPosition: initialPosition,
     );
   }

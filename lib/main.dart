@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ubts_fyp/pages/onboarding.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:ubts_fyp/widgets/common/color_theme.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -21,7 +22,7 @@ Future<void> main() async {
 }
 
 var lightTheme = ThemeData.light().colorScheme.copyWith(
-      primary: const Color(0xFFFD813B),
+      primary: ColorTheme.primaryTint1,
     );
 
 class MainApp extends StatelessWidget {

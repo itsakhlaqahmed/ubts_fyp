@@ -5,6 +5,7 @@ import 'package:ubts_fyp/models/user.dart';
 import 'package:ubts_fyp/pages/success.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
+import 'package:ubts_fyp/widgets/common/color_theme.dart';
 import 'package:ubts_fyp/widgets/signup/bus_route.dart';
 import 'package:ubts_fyp/widgets/signup/bus_stop.dart';
 import 'package:ubts_fyp/widgets/common/custom_snackbar.dart';
@@ -23,7 +24,7 @@ class _SignupPageState extends State<SignupPage> {
   Map<UserData, String> signUpData = {
     UserData.userType: 'user',
   };
-   int activeFormIndex = 0;
+  int activeFormIndex = 0;
 
   var busStops = const [
     BusStop(from: 'Baldia Town', to: 'Steel Town'),
@@ -157,7 +158,7 @@ class _SignupPageState extends State<SignupPage> {
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   fontWeight: FontWeight.w900,
                   fontSize: 40,
-                  color: const Color.fromARGB(255, 253, 129, 59),
+                  color: ColorTheme.primary,
                 ),
           ),
         ),

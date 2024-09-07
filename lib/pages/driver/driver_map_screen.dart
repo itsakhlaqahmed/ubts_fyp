@@ -41,6 +41,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
   Timer? _timer;
   bool _fullMapEnabled = false;
   final Set<Polyline> _polylines = {};
+  Set<Marker>? _markers;
 
   Future<void> _getPolyline(String busId) async {
     final polylineCoordinates = await _mapLocationService.getPolyline(busId);
@@ -55,10 +56,21 @@ class _StartRidePagetate extends State<DriverMapScreen> {
           width: 6,
         ),
       );
+      _markers = {
+        Marker(
+          markerId: const MarkerId('start'),
+          position: polylineCoordinates.first,
+        ),
+        Marker(
+          markerId: const MarkerId('end'),
+          position: polylineCoordinates.last,
+        ),
+      };
     });
   }
 
   Future<void> _startLiveLocation() async {
+    _timer?.cancel();
     final Map<String, dynamic> driver = {
       'name': widget.userData[UserData.fullName],
       'phone': widget.userData[UserData.studentId],
@@ -274,6 +286,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
       fullMapEnabled: _fullMapEnabled,
       onExitFullScreen: _exitFullScreen,
       polylines: _polylines,
+      markers: _markers,
     );
   }
 
