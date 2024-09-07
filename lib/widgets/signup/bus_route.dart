@@ -55,10 +55,12 @@ class _BusRoutePanelState extends State<BusRoutePanel> {
       ),
       decoration: BoxDecoration(
         border: Border.all(
-          color: isSelected ? ColorTheme.primary : Colors.black,
+          color: isSelected ? ColorTheme.primaryTint1 : Colors.black,
         ),
         borderRadius: BorderRadius.circular(6),
-        color: isSelected ? ColorTheme.primaryWithOpacity(30) : Colors.white,
+        color: isSelected
+            ? ColorTheme.colorWithOpacity(ColorTheme.primaryTint1, .2)
+            : Colors.white,
       ),
       child: InkWell(
         onTap: () {

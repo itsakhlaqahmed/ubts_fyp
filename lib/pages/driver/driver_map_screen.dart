@@ -11,6 +11,7 @@ import 'package:ubts_fyp/pages/login.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/map_location_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
+import 'package:ubts_fyp/widgets/common/color_theme.dart';
 import 'package:ubts_fyp/widgets/home/home_map_card.dart';
 
 class DriverMapScreen extends StatefulWidget {
@@ -40,34 +41,6 @@ class _StartRidePagetate extends State<DriverMapScreen> {
   String? _address;
   Timer? _timer;
   bool _fullMapEnabled = false;
-  final Set<Polyline> _polylines = {};
-  Set<Marker>? _markers;
-
-  Future<void> _getPolyline(String busId) async {
-    final polylineCoordinates = await _mapLocationService.getPolyline(busId);
-
-    setState(() {
-      _polylines.add(
-        Polyline(
-          polylineId: const PolylineId('polyline'),
-          visible: true,
-          points: polylineCoordinates,
-          color: const Color.fromARGB(255, 253, 129, 59),
-          width: 6,
-        ),
-      );
-      _markers = {
-        Marker(
-          markerId: const MarkerId('start'),
-          position: polylineCoordinates.first,
-        ),
-        Marker(
-          markerId: const MarkerId('end'),
-          position: polylineCoordinates.last,
-        ),
-      };
-    });
-  }
 
   Future<void> _startLiveLocation() async {
     _timer?.cancel();
@@ -75,14 +48,9 @@ class _StartRidePagetate extends State<DriverMapScreen> {
       'name': widget.userData[UserData.fullName],
       'phone': widget.userData[UserData.studentId],
     };
-    // setState(() {
-    //   _locationServiceRunning = true;
-    // });
-
     try {
       // get device location for the first time
       await _getLocation();
-      await _getPolyline(widget.busId);
       await _mapLocationService.startRide(
         busId: widget.busId,
         direction: widget.direction,
@@ -115,7 +83,6 @@ class _StartRidePagetate extends State<DriverMapScreen> {
   @override
   void initState() {
     _startLiveLocation();
-    _getPolyline(widget.busId);
     super.initState();
   }
 
@@ -285,8 +252,6 @@ class _StartRidePagetate extends State<DriverMapScreen> {
       address: _address,
       fullMapEnabled: _fullMapEnabled,
       onExitFullScreen: _exitFullScreen,
-      polylines: _polylines,
-      markers: _markers,
     );
   }
 
@@ -299,9 +264,9 @@ class _StartRidePagetate extends State<DriverMapScreen> {
             : LiquidPullToRefresh(
                 animSpeedFactor: 2,
                 height: 200,
-                backgroundColor: const Color.fromARGB(255, 253, 129, 59),
-                color: const Color.fromARGB(100, 249, 181,
-                    142), // const Color.fromARGB(141, 244, 174, 134),
+                backgroundColor: ColorTheme.primaryTint1,
+                color: ColorTheme.colorWithOpacity(ColorTheme.primaryTint1,
+                    .4), // const Color.fromARGB(141, 244, 174, 134),
                 showChildOpacityTransition: false,
                 onRefresh: () async {
                   Future.delayed(const Duration(seconds: 1), () async {
@@ -327,7 +292,6 @@ class _StartRidePagetate extends State<DriverMapScreen> {
                               currentLocation: _currentLocation!,
                               address: _address,
                               onClickFullScreen: _enableFullScreen,
-                              polylines: _polylines,
                             )
                           : _getMapSkeleton(),
                       const SizedBox(

@@ -10,6 +10,7 @@ import 'package:ubts_fyp/pages/login.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/map_location_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
+import 'package:ubts_fyp/widgets/common/color_theme.dart';
 import 'package:ubts_fyp/widgets/home/home_map_card.dart';
 import 'package:ubts_fyp/widgets/home/not_approved.dart';
 
@@ -43,11 +44,9 @@ class _HomeState extends State<Home> {
   final MapLocationService _mapLocationService = MapLocationService();
   LatLng? _currentLocation;
   String? _address;
-  final Set<Polyline> _polylines = {};
   bool _fullMapEnabled = false;
   Timer? _timer;
   LatLng? initialPosition;
-  Set<Marker>? _markers;
 
   @override
   initState() {
@@ -75,6 +74,7 @@ class _HomeState extends State<Home> {
     try {
       // log(busId);
       final busData = await _mapLocationService.fetchBus(busId);
+
       // log(
       //     'busData?.rideStatus *********************************************88');
       // log(busData?.rideStatus);
@@ -87,7 +87,7 @@ class _HomeState extends State<Home> {
       }
       await _startFetchingLocation();
     } catch (err) {
-      log(err.toString());
+      log('error 101', error: err);
     }
   }
 
@@ -101,9 +101,6 @@ class _HomeState extends State<Home> {
         initialPosition = latestLocation;
       });
 
-      await _getPolyline(
-        _userData[UserData.busRoute],
-      );
       await _getAddress(_currentLocation!);
       _timer = Timer.periodic(const Duration(seconds: 3), (_) async {
         if (_hasRideStarted) {
@@ -117,7 +114,7 @@ class _HomeState extends State<Home> {
         }
       });
     } catch (err) {
-      // log(err.toString() + '**************************');
+      log('home 102: $err');
     }
   }
 
@@ -190,33 +187,6 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Future<void> _getPolyline(String busId) async {
-    final polylineCoordinates = await _mapLocationService.getPolyline(busId);
-
-    setState(() {
-      _polylines.add(
-        Polyline(
-          polylineId: const PolylineId('polyline'),
-          visible: true,
-          points: polylineCoordinates,
-          color: const Color.fromARGB(255, 253, 129, 59),
-          endCap: Cap.roundCap,
-          width: 6,
-        ),
-      );
-      _markers = {
-        Marker(
-          markerId: const MarkerId('start'),
-          position: polylineCoordinates.first,
-        ),
-        Marker(
-          markerId: const MarkerId('end'),
-          position: polylineCoordinates.last,
-        ),
-      };
-    });
-  }
-
   void _signOut() async {
     await _authService.signOut();
     await PersistantStorage().deleteLocalUser();
@@ -244,13 +214,11 @@ class _HomeState extends State<Home> {
   Widget _getFullScreenMap() {
     return HomeMapCard(
       // routeName: widget.busName,
-      routeName: 'widget.busName',
+      routeName: _userData[UserData.busRoute],
       currentLocation: _currentLocation!,
       address: _address,
       fullMapEnabled: _fullMapEnabled,
       onExitFullScreen: _exitFullScreen,
-      polylines: _polylines,
-      markers: _markers,
       initialPosition: initialPosition,
     );
   }
@@ -367,9 +335,8 @@ class _HomeState extends State<Home> {
           : LiquidPullToRefresh(
               animSpeedFactor: 2,
               height: 200,
-              backgroundColor: const Color.fromARGB(255, 253, 129, 59),
-              color: const Color.fromARGB(100, 249, 181,
-                  142), // const Color.fromARGB(141, 244, 174, 134),
+              backgroundColor: ColorTheme.primary,
+              color: ColorTheme.primaryWithOpacity(.4),
               showChildOpacityTransition: false,
               onRefresh: () async {
                 Future.delayed(const Duration(seconds: 1), () {
@@ -395,7 +362,6 @@ class _HomeState extends State<Home> {
                               currentLocation: _currentLocation!,
                               address: _address,
                               onClickFullScreen: _enableFullScreen,
-                              polylines: _polylines,
                               initialPosition: initialPosition,
                             )
                           : _getMapSkeleton(),

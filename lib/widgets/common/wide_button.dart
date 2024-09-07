@@ -29,18 +29,27 @@ class WideButton extends StatelessWidget {
         width: double.infinity,
         height: 50,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: isDisabled ?? false
-                ? ColorTheme.primaryWithOpacity(60)
-                : ColorTheme.primary,
-            gradient: isDisabled ?? false
-                ? null
-                : LinearGradient(
-                    colors: [
-                      ColorTheme.primaryShade1,
-                      ColorTheme.primary,
-                    ],
-                  )),
+          borderRadius: BorderRadius.circular(8),
+          color: isDisabled ?? false
+              ? ColorTheme.primaryWithOpacity(.6)
+              : ColorTheme.primary,
+          gradient: isDisabled ?? false
+              ? null
+              : LinearGradient(
+                  colors: [
+                    ColorTheme.primaryShade1,
+                    ColorTheme.primary,
+                  ],
+                ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(.5),
+              blurRadius: 2,
+              spreadRadius: 2,
+              offset: const Offset(1, 2),
+            ),
+          ],
+        ),
         child: Center(
           child: isLoading ?? false
               ? SizedBox(

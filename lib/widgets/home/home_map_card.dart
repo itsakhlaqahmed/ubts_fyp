@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ubts_fyp/services/map_location_service.dart';
+import 'package:ubts_fyp/widgets/common/color_theme.dart';
 import 'package:ubts_fyp/widgets/common/wide_button.dart';
 
 class HomeMapCard extends StatefulWidget {
@@ -17,14 +20,11 @@ class HomeMapCard extends StatefulWidget {
     this.onExitFullScreen,
     this.onClickFullScreen,
     this.initialPosition,
-    this.markers,
-    this.polylines,
   });
 
   final String routeName;
   final LatLng currentLocation;
-  final Set<Polyline>? polylines;
-  final Set<Marker>? markers;
+
   final LatLng? initialPosition;
   final String? address;
   final bool? fullMapEnabled;
@@ -41,10 +41,13 @@ class _HomeMapCardState extends State<HomeMapCard> {
   // late Circle _circle;
   late LatLng newPosition;
   Timer? _timer;
+  Set<Marker> _markers = {};
+  final Set<Polyline> _polylines = {};
 
   @override
   void initState() {
     super.initState();
+    _getPolyline(widget.routeName);
     newPosition = widget.currentLocation;
     // _setCricle();
   }
@@ -54,18 +57,45 @@ class _HomeMapCardState extends State<HomeMapCard> {
     controller.animateCamera(CameraUpdate.newLatLng(widget.currentLocation));
   }
 
-  // _setCricle() {
-  //   setState(() {
-  //     _circle = Circle(
-  //       circleId: const CircleId('currentLocation'),
-  //       center: widget.currentLocation,
-  //       radius: 20,
-  //       fillColor: Colors.orange,
-  //       strokeColor: const Color.fromARGB(133, 255, 204, 128),
-  //       strokeWidth: 30,
-  //     );
-  //   });
-  // }
+  Future<void> _getPolyline(String busId) async {
+    try {
+      final polylineCoordinates = await MapLocationService().getPolyline(busId);
+
+      setState(() {
+        _polylines.add(
+          Polyline(
+              polylineId: const PolylineId('polyline'),
+              visible: true,
+              points: polylineCoordinates,
+              color: ColorTheme.primaryTint1,
+              width: 4,
+              zIndex: 4),
+        );
+        _polylines.add(
+          Polyline(
+            polylineId: const PolylineId('polyline2'),
+            visible: true,
+            points: polylineCoordinates,
+            color: ColorTheme.primary,
+            width: 8,
+            zIndex: 3,
+          ),
+        );
+        _markers = {
+          Marker(
+            markerId: const MarkerId('start'),
+            position: polylineCoordinates.first,
+          ),
+          Marker(
+            markerId: const MarkerId('end'),
+            position: polylineCoordinates.last,
+          ),
+        };
+      });
+    } catch (err) {
+      log('map_card 101', error: err);
+    }
+  }
 
   @override
   void didUpdateWidget(covariant HomeMapCard oldWidget) {
@@ -93,19 +123,19 @@ class _HomeMapCardState extends State<HomeMapCard> {
         target: widget.currentLocation,
         zoom: 17,
       ),
-      polylines: widget.polylines ?? {},
+      polylines: _polylines,
+      markers: _markers,
       circles: {
         // _circle,
         Circle(
           circleId: const CircleId('currentLocation'),
           center: newPosition,
           radius: 20,
-          fillColor: Colors.orange,
-          strokeColor: const Color.fromARGB(133, 255, 204, 128),
+          fillColor: ColorTheme.primary,
+          strokeColor: ColorTheme.primaryWithOpacity(.4),
           strokeWidth: 30,
         )
       },
-      markers: widget.markers ?? {},
     );
   }
 
@@ -177,7 +207,7 @@ class _HomeMapCardState extends State<HomeMapCard> {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: const Color.fromARGB(99, 253, 187, 148),
+                    color: ColorTheme.primaryWithOpacity(.2),
                   ),
                   padding: const EdgeInsets.all(16.0),
                   child: Column(

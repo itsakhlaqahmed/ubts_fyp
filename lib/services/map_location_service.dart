@@ -50,7 +50,7 @@ class MapLocationService {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      log(data);
+      log(data.toString());
       final rideStatus = data['rideStatus'];
       final Map<String, dynamic> locations = data['locations'];
       log('____________________________________________________________________________');

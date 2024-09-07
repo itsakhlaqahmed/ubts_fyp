@@ -62,11 +62,11 @@ class _SignupFormState extends State<SignupForm> {
   }
 
   String? _matchPassword(String? value) {
-    var password = _userData[UserData.password]!;
+    var password = _userData[UserData.password];
     if (value == null || value.isEmpty) {
       return 'This field is required.';
     }
-    if (password.length < 6) {
+    if (password!.length < 6) {
       return 'Password is too small (min 6 char)';
     }
     if (value != password) {

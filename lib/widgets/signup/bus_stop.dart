@@ -82,12 +82,15 @@ class _BusStopPanelState extends State<BusStopPanel> {
                     child: Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: isSelected
-                            ? ColorTheme.primaryWithOpacity(30)
-                            : Colors.white,
                         border: Border.all(
-                          color: isSelected ? ColorTheme.primary : Colors.black,
+                          color: isSelected
+                              ? ColorTheme.primaryTint1
+                              : Colors.black,
                         ),
+                        color: isSelected
+                            ? ColorTheme.colorWithOpacity(
+                                ColorTheme.primaryTint1, .2)
+                            : Colors.white,
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Column(
@@ -166,7 +169,7 @@ class _BusStopPanelState extends State<BusStopPanel> {
                                 decoration: BoxDecoration(
                                   color: isSelected
                                       ? ColorTheme.primaryShade1
-                                      : ColorTheme.primary,
+                                      : ColorTheme.primaryWithOpacity(.95),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Center(

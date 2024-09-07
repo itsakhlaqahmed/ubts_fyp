@@ -1,4 +1,12 @@
 flutter_native_splash:
   android: true
+  ios: true
+  web: false
+  color: "#FFC0CB" # Background color of the splash screen
+  android_gravity: center
+  fullscreen: true
 
-  background_image: "assets/splash_background.png"
+
+
+
+  # background_image: "assets/splash_background.png"

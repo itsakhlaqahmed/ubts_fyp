@@ -6,6 +6,7 @@ import 'package:ubts_fyp/pages/driver/driver_map_screen.dart';
 import 'package:ubts_fyp/pages/login.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
+import 'package:ubts_fyp/widgets/common/color_theme.dart';
 import 'package:ubts_fyp/widgets/common/wide_button.dart';
 
 class DriverHome extends StatefulWidget {
@@ -131,18 +132,10 @@ class _DriverHomeState extends State<DriverHome> {
             ),
             decoration: BoxDecoration(
               border: Border.all(
-                color:
-                    //  isSelected
-                    //     ? const Color.fromARGB(255, 253, 129, 59)
-                    //     : Colors.black,
-                    Colors.black,
+                color: Colors.black,
               ),
               borderRadius: BorderRadius.circular(6),
-              color:
-                  // isSelected
-                  //     ? const Color.fromARGB(70, 255, 144, 80)
-                  //     : Colors.white,
-                  Colors.white,
+              color: Colors.white,
             ),
             child: InkWell(
               onTap: () {
@@ -227,14 +220,18 @@ class _DriverHomeState extends State<DriverHome> {
         ),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(7),
+          border: null,
         ),
+        clipBehavior: Clip.hardEdge,
         child: Container(
           height: 60,
           width: double.infinity,
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
-            border: Border.all(color: const Color.fromARGB(255, 253, 129, 59)),
+            border: Border.all(
+              color: ColorTheme.primaryTint1,
+            ),
             borderRadius: BorderRadius.circular(6),
             // color: const Color.fromARGB(70, 255, 144, 80),
           ),
@@ -259,7 +256,7 @@ class _DriverHomeState extends State<DriverHome> {
       },
       child: Container(
         color: _direction == direction.toLowerCase()
-            ? const Color.fromARGB(70, 255, 144, 80)
+            ? ColorTheme.colorWithOpacity(ColorTheme.primaryTint1, .2)
             : Colors.white,
         height: 60,
         width: (MediaQuery.of(context).size.width - 66) / 2,
@@ -267,9 +264,9 @@ class _DriverHomeState extends State<DriverHome> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _direction == direction.toLowerCase()
-                ? const Icon(
+                ? Icon(
                     Icons.check_circle_outline,
-                    color: Colors.orange,
+                    color: ColorTheme.primaryTint1,
                     size: 32,
                   )
                 : const SizedBox.shrink(),
@@ -343,7 +340,7 @@ class _DriverHomeState extends State<DriverHome> {
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 fontWeight: FontWeight.w900,
                 fontSize: 24,
-                color: const Color.fromARGB(255, 253, 129, 59),
+                color: ColorTheme.primaryShade1,
               ),
         ),
         centerTitle: true,
