@@ -50,7 +50,7 @@ class NotApproved extends StatelessWidget {
               'Your account application is pending approval form the admin. If your account isn\'t approved within 2-3 working days, contact the transportation department.',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: ColorTheme.primaryShade1,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                     
                   ),

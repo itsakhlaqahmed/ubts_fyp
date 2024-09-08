@@ -13,6 +13,7 @@ import 'package:ubts_fyp/services/persistant_storage.dart';
 import 'package:ubts_fyp/widgets/common/color_theme.dart';
 import 'package:ubts_fyp/widgets/home/home_map_card.dart';
 import 'package:ubts_fyp/widgets/home/not_approved.dart';
+import 'package:ubts_fyp/widgets/home/ride_status.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key, this.user});
@@ -326,9 +327,10 @@ class _HomeState extends State<Home> {
               ? _getTitleBar()
               : _getTitleBarSkeleton(),
           const SizedBox(height: 12),
-          NotApproved(
-            onSignout: _signOut,
-          ),
+          // NotApproved(
+          //   onSignout: _signOut,
+          // ),
+          const RideStatus(),
         ],
       );
     } else {
