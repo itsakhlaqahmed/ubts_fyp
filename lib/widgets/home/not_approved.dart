@@ -1,30 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:ubts_fyp/widgets/common/color_theme.dart';
+import 'package:ubts_fyp/widgets/common/wide_button.dart';
 
 class NotApproved extends StatelessWidget {
-  const NotApproved({super.key});
-
-  final double a = 0.0;
+  const NotApproved({super.key, required this.onSignout});
+  final Function onSignout;
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
+      // physics: const AlwaysScrollableScrollPhysics(),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        // mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(
             height: 8,
           ),
           SizedBox(
-            width: a,
-          ),
-          SizedBox(
             height: 400,
             child: Image.asset(
-              'assets/clock.gif',
+              'assets/wait_image.png',
               fit: BoxFit.cover,
-              color: const Color.fromARGB(54, 248, 235, 228),
+              // color: ColorTheme.primaryWithOpacity(.05 ),
               colorBlendMode: BlendMode.multiply,
             ),
           ),
@@ -35,22 +34,37 @@ class NotApproved extends StatelessWidget {
             height: 36,
           ),
           Text(
-            'Not Approved Yet',
+            'Wait for Approval ⌛',
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFFFD813B),
+                  color: ColorTheme.primaryShade1,
+                  fontSize: 28,
                 ),
           ),
           const SizedBox(
-            height: 16,
+            height: 24,
           ),
-          Text(
-            'Your account is pending approval form the admin. If your account isn\'t approved within 2,3 working days then kindly contact the transport department.',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  color: const Color.fromARGB(255, 255, 149, 88),
-                  fontWeight: FontWeight.bold
-                ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Text(
+              'Your account application is pending approval form the admin. If your account isn\'t approved within 2-3 working days, contact the transportation department.',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: ColorTheme.primaryShade1,
+                    fontWeight: FontWeight.bold,
+                    
+                  ),
+            ),
+          ),
+          const SizedBox(
+            height: 48,
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width - 48,
+            child: WideButton(
+              onSubmitForm: onSignout,
+              buttonText: 'Logout',
+            ),
           ),
         ],
       ),
