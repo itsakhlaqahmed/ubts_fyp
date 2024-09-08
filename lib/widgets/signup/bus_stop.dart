@@ -12,7 +12,7 @@ class BusStopPanel extends StatefulWidget {
   });
 
   final List<BusStop> busStops;
-  final Function(String stop) onSelectBusStop;
+  final Future<void> Function(String stop) onSelectBusStop;
   @override
   State<BusStopPanel> createState() => _BusStopPanelState();
 }
@@ -209,7 +209,7 @@ class _BusStopPanelState extends State<BusStopPanel> {
                     _isLoading = true;
                   });
 
-                  widget.onSelectBusStop(_selectedStop!.toString());
+                  await widget.onSelectBusStop(_selectedStop!.toString());
 
                   setState(() {
                     _isLoading = false;

@@ -61,7 +61,7 @@ class _SignupPageState extends State<SignupPage> {
     });
   } // end _selectRoute
 
-  void _selectStop(String busStop) async {
+  Future<void> _selectStop(String busStop) async {
     signUpData[UserData.busStop] = busStop;
     await _createStudentAccount();
   } // end _selectStop

@@ -170,7 +170,7 @@ class _HomeMapCardState extends State<HomeMapCard> {
   Widget build(BuildContext context) {
     _moveCam();
 
-    return widget.fullMapEnabled ?? false
+    return widget.fullMapEnabled == true
         ? Animate(
             effects: const [
               ScaleEffect(
@@ -184,12 +184,27 @@ class _HomeMapCardState extends State<HomeMapCard> {
                 _getGoogleMap(),
                 Positioned(
                   bottom: 40,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    width: MediaQuery.of(context).size.width,
-                    child: WideButton(
-                        onSubmitForm: widget.onExitFullScreen!,
-                        buttonText: 'Exit Full Map'),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        width: MediaQuery.of(context).size.width,
+                        child: WideButton(
+                            onSubmitForm: widget.onExitFullScreen!,
+                            buttonText: 'Exit Full Map'),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        width: MediaQuery.of(context).size.width,
+                        child: WideButton(
+                          color: Color.fromARGB(255, 200, 2, 2),
+                            onSubmitForm: widget.onExitFullScreen!,
+                            buttonText: 'End Ride'),
+                      ),
+                    ],
                   ),
                 ),
               ],

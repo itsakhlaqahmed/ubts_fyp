@@ -19,7 +19,7 @@ class WideButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: isDisabled ?? false
           ? null
           : () {
@@ -30,15 +30,18 @@ class WideButton extends StatelessWidget {
         height: 50,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: isDisabled ?? false
-              ? ColorTheme.primaryWithOpacity(.6)
-              : ColorTheme.primary,
-          gradient: isDisabled ?? false
+          color: isDisabled == true
+              ? ColorTheme.colorWithOpacity(
+                  color ?? ColorTheme.primary,
+                  .6,
+                )
+              : null,
+          gradient: isDisabled == true
               ? null
               : LinearGradient(
                   colors: [
-                    ColorTheme.primaryShade1,
-                    ColorTheme.primary,
+                    color ?? ColorTheme.primaryShade1,
+                    color?.withOpacity(.8) ?? ColorTheme.primary,
                   ],
                 ),
           boxShadow: [

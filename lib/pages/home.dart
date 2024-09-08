@@ -229,7 +229,7 @@ class _HomeState extends State<Home> {
       width: width ?? double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Colors.amber,
+        color: ColorTheme.primary,
       ),
     );
   }
@@ -326,7 +326,9 @@ class _HomeState extends State<Home> {
               ? _getTitleBar()
               : _getTitleBarSkeleton(),
           const SizedBox(height: 12),
-          const NotApproved(),
+          NotApproved(
+            onSignout: _signOut,
+          ),
         ],
       );
     } else {
