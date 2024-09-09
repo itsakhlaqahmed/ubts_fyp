@@ -8,6 +8,7 @@ import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
 import 'package:ubts_fyp/widgets/common/color_theme.dart';
 import 'package:ubts_fyp/widgets/common/wide_button.dart';
+import 'package:ubts_fyp/widgets/home/welcome_banner.dart';
 
 class DriverHome extends StatefulWidget {
   const DriverHome({super.key, this.user});
@@ -46,7 +47,7 @@ class _DriverHomeState extends State<DriverHome> {
 
   void _nextPage() {
     if (_selectedRoute != null) {
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (_) => DriverMapScreen(
             userData: _userData,
@@ -374,6 +375,23 @@ class _DriverHomeState extends State<DriverHome> {
                   const SizedBox(
                     height: 48,
                   ),
+                  const WelcomeBanner(),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  // Center(
+                  //   child: Text(
+                  //     'Ready to Start',
+                  //     style: TextStyle(
+                  //       fontWeight: FontWeight.bold,
+                  //       color: ColorTheme.primary,
+                  //       fontSize: 28,
+                  //     ),
+                  //   ),
+                  // ),
+                  // const SizedBox(
+                  //   height: 32,
+                  // ),
                   Center(
                     child: Text(
                       _selectedRoute == null

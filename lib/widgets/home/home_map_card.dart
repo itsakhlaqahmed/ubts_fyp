@@ -200,7 +200,7 @@ class _HomeMapCardState extends State<HomeMapCard> {
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         width: MediaQuery.of(context).size.width,
                         child: WideButton(
-                          color: Color.fromARGB(255, 200, 2, 2),
+                            color: Color.fromARGB(255, 200, 2, 2),
                             onSubmitForm: widget.onExitFullScreen!,
                             buttonText: 'End Ride'),
                       ),
@@ -216,7 +216,7 @@ class _HomeMapCardState extends State<HomeMapCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 350,
+                  height: MediaQuery.of(context).size.height - 500,
                   child: _getGoogleMap(),
                 ),
                 Container(
@@ -251,10 +251,11 @@ class _HomeMapCardState extends State<HomeMapCard> {
                             width: 4,
                           ),
                           Text(
-                            rideStarted ? 'on Route' : 'Not started',
-                            style: const TextStyle(
+                            rideStarted ? 'ON Route ...' : 'Not started',
+                            style: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w900,
+                              color: rideStarted ? Colors.redAccent : null,
                             ),
                           ),
                         ],
