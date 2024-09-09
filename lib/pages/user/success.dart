@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:ubts_fyp/pages/home.dart';
+import 'package:ubts_fyp/pages/user/home.dart';
 import 'package:ubts_fyp/widgets/common/color_theme.dart';
 import 'package:ubts_fyp/widgets/common/wide_button.dart';
 

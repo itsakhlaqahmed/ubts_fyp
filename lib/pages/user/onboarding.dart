@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ubts_fyp/pages/login.dart';
-import 'package:ubts_fyp/pages/signup.dart';
+import 'package:ubts_fyp/pages/user/login.dart';
+import 'package:ubts_fyp/pages/user/signup.dart';
 import 'package:ubts_fyp/widgets/onboarding/onboarding_screen.dart';
 import 'package:ubts_fyp/data/onboarding_screen_data.dart';
 

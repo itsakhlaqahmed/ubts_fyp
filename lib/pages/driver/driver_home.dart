@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:ubts_fyp/models/user.dart';
 import 'package:ubts_fyp/pages/driver/driver_map_screen.dart';
-import 'package:ubts_fyp/pages/login.dart';
+import 'package:ubts_fyp/pages/user/login.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
 import 'package:ubts_fyp/widgets/common/color_theme.dart';
@@ -177,8 +177,8 @@ class _DriverHomeState extends State<DriverHome> {
         children: [
           Text(
             _userData[UserData.fullName] ?? 'null',
-            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  fontSize: 24,
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  // fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -272,7 +272,7 @@ class _DriverHomeState extends State<DriverHome> {
                   )
                 : const SizedBox.shrink(),
             const SizedBox(
-              width: 8,
+              width: 4,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -291,7 +291,7 @@ class _DriverHomeState extends State<DriverHome> {
                 Text(
                   'From SMIU \nTo $route',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 12),
+                  style: const TextStyle(fontSize: 10),
                 ),
               ],
             ),

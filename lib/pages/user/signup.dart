@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubts_fyp/models/user.dart';
-import 'package:ubts_fyp/pages/success.dart';
+import 'package:ubts_fyp/pages/user/success.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
 import 'package:ubts_fyp/widgets/common/color_theme.dart';
