@@ -321,17 +321,19 @@ class _HomeState extends State<Home> {
 
     if (_userData[UserData.isApproved] != 'true') {
       // implement not approved ui here
-      content = Column(
-        children: [
-          const SizedBox(height: 8),
-          _userData[UserData.userId] != null
-              ? _getTitleBar()
-              : _getTitleBarSkeleton(),
-          const SizedBox(height: 12),
-          NotApproved(
-            onSignout: _signOut,
-          ),
-        ],
+      content = SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 8),
+            _userData[UserData.userId] != null
+                ? _getTitleBar()
+                : _getTitleBarSkeleton(),
+            const SizedBox(height: 12),
+            NotApproved(
+              onSignout: _signOut,
+            ),
+          ],
+        ),
       );
     } else {
       content = _fullMapEnabled

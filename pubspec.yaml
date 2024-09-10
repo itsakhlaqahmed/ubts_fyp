@@ -42,9 +42,9 @@ flutter_native_splash:
   android: true
   ios: false
   web: false
-  background_image: "assets/splash_background.png"
-  android_gravity: center
+  image: "assets/splash_screen_logo.png"
   fullscreen: true
+  color: "#017561"
   android_12:
     android: true
     ios: false
