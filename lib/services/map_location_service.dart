@@ -8,16 +8,16 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class BusRide {
   BusRide({
-    required this.routeName,
     required this.rideStatus,
-    required this.locations,
+    this.routeName,
+    this.locations,
     this.driverName,
     this.driverPhone,
   });
 
-  final String routeName;
+  final String? routeName;
   final String rideStatus;
-  final Map<String, dynamic> locations;
+  final Map<String, dynamic>? locations;
   final String? driverName;
   final String? driverPhone;
 }
@@ -36,7 +36,7 @@ class MapLocationService {
   Future<bool> endBusRide(String busId) async {
     final url = Uri.parse('$_databaseUrl/Buses/$busId.json');
     final busData = {
-      'busStatus': 'ended',
+      'rideStatus': 'ended',
     };
     final response = await http.put(url, body: json.encode(busData));
 
@@ -53,8 +53,10 @@ class MapLocationService {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      log(data.toString());
       final rideStatus = data['rideStatus'];
+      if (rideStatus != 'started') {
+        return BusRide(rideStatus: 'not started');
+      }
       final Map<String, dynamic> locations = data['locations'];
       log('____________________________________________________________________________');
       log(data['driver']['phone']);

@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:ubts_fyp/widgets/common/color_theme.dart';
 
 class RideStatus extends StatelessWidget {
-  const RideStatus({super.key});
+  const RideStatus({super.key, this.isEndRideWidget});
 
-  final heading = 'Bus hasn\'t started yet';
-  final messsage =
-      'Your ride hasn\'t started yet. Once it begins, you\'ll see the details here.';
+  final bool? isEndRideWidget;
 
   @override
   Widget build(BuildContext context) {
+    var heading = 'Bus hasn\'t started yet';
+    var messsage =
+        'Your ride hasn\'t started yet. Once it begins, you\'ll see the map here.';
+    if (isEndRideWidget == true) {
+      heading = 'Bus has Arrived ...';
+      messsage =
+          'The bus has arrived it\'s destination. Kindly report any inconveince during the ride to the transportation department';
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -20,7 +26,7 @@ class RideStatus extends StatelessWidget {
         SizedBox(
           height: 400,
           child: Image.asset(
-            'assets/welcome.png',
+            'assets/${isEndRideWidget == true ? 'arrived' : 'welcome'}.png',
             fit: BoxFit.cover,
           ),
         ),
@@ -28,14 +34,16 @@ class RideStatus extends StatelessWidget {
         //     ? _getTitleBar()
         //     : _getTitleBarSkeleton(),
         const SizedBox(
-          height: 40,
+          height: 48,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.directions_bus,
-              color: ColorTheme.primaryTint1,
+              color: isEndRideWidget == true
+                  ? Colors.red[600]
+                  : ColorTheme.primaryTint1,
             ),
             const SizedBox(
               width: 6,
@@ -44,7 +52,9 @@ class RideStatus extends StatelessWidget {
               heading,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: ColorTheme.primaryTint1,
+                    color: isEndRideWidget == true
+                        ? Colors.red[600]
+                        : ColorTheme.primaryTint1,
                     fontSize: 28,
                   ),
             ),

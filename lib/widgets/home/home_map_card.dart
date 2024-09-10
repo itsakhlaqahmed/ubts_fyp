@@ -256,7 +256,7 @@ class _HomeMapCardState extends State<HomeMapCard> {
                             width: 4,
                           ),
                           Text(
-                            rideStarted ? 'ON Route ...' : 'Not started',
+                            rideStarted ? 'On Route ...' : 'Not started',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w900,

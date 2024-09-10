@@ -54,7 +54,6 @@ class _HomeState extends State<Home> {
     authenticateUser();
     _fetchLocalUser();
     _getBusStatus(_userData[UserData.busRoute]);
-    // _getBusStatus(_userData[UserData.busRoute]);
     super.initState();
     // _getMapData(_busId);
   }
@@ -73,6 +72,10 @@ class _HomeState extends State<Home> {
 
   Future<void> _getBusStatus(String busId) async {
     // get route/bus data whether it has started and so on
+
+    if (_userData[UserData.isApproved] != 'true') {
+      return;
+    }
     try {
       // log(busId);
       final busData = await _mapLocationService.fetchBus(busId);
@@ -80,14 +83,29 @@ class _HomeState extends State<Home> {
       // log(
       //     'busData?.rideStatus *********************************************88');
       // log(busData?.rideStatus);
-      if (busData != null && busData.rideStatus == 'started') {
+      if (busData == null) return;
+      if (busData.rideStatus == 'started') {
         setState(() {
           _hasRideStarted = true;
+          _hasRideEnded = false;
           _driverName = busData.driverName!;
           _driverPhone = busData.driverPhone ?? 'null';
         });
+        await _startFetchingLocation();
+      } else if (busData.rideStatus == 'ended') {
+        log(' stoppppped ********************8');
+        _endFetchingLocation();
+        setState(() {
+          _hasRideStarted = false;
+          _hasRideEnded = true;
+        });
+      } else {
+        _endFetchingLocation();
+        setState(() {
+          _hasRideStarted = false;
+          _hasRideEnded = false;
+        });
       }
-      await _startFetchingLocation();
     } catch (err) {
       log('error 101', error: err);
     }
@@ -104,7 +122,7 @@ class _HomeState extends State<Home> {
       });
 
       await _getAddress(_currentLocation!);
-      _timer = Timer.periodic(const Duration(seconds: 3), (_) async {
+      _timer = Timer.periodic(const Duration(seconds: 3), (time) async {
         if (_hasRideStarted) {
           final newPosition = await _fetchLatestLocation();
           setState(() {
@@ -124,15 +142,18 @@ class _HomeState extends State<Home> {
     _timer?.cancel();
   }
 
-  Future<void> handleBusRideEnded() async {
-    setState(() {
-      _hasRideEnded = true;
-    });
-  }
-
   Future<LatLng> _fetchLatestLocation() async {
     final response = await _mapLocationService.fetchLocation(
       _userData[UserData.busRoute],
+      onRideEnd: () {
+        _endFetchingLocation();
+        setState(
+          () {
+            _hasRideEnded = true;
+            _hasRideStarted = false;
+          },
+        );
+      },
     );
 
     return LatLng(response!['latitude'], response['longitude']);
@@ -315,40 +336,66 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Widget _getPullDown({required Widget child}) {
+    return LiquidPullToRefresh(
+        animSpeedFactor: 2,
+        height: 200,
+        backgroundColor: ColorTheme.primary,
+        color: ColorTheme.primaryWithOpacity(.4),
+        showChildOpacityTransition: false,
+        onRefresh: () async {
+          Future.delayed(const Duration(seconds: 1), () {
+            _getBusStatus(_userData[UserData.busRoute]);
+          });
+        },
+        child: child);
+  }
+
   @override
   Widget build(BuildContext context) {
     late Widget content;
 
     if (_userData[UserData.isApproved] != 'true') {
       // implement not approved ui here
-      content = SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 8),
-            _userData[UserData.userId] != null
-                ? _getTitleBar()
-                : _getTitleBarSkeleton(),
-            const SizedBox(height: 12),
-            NotApproved(
-              onSignout: _signOut,
-            ),
-          ],
+      content = _getPullDown(
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              const SizedBox(height: 8),
+              _userData[UserData.userId] != null
+                  ? _getTitleBar()
+                  : _getTitleBarSkeleton(),
+              const SizedBox(height: 12),
+              NotApproved(
+                onSignout: _signOut,
+              ),
+            ],
+          ),
+        ),
+      );
+    } else if (!_hasRideStarted) {
+      content = _getPullDown(
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              const SizedBox(height: 8),
+              _userData[UserData.userId] != null
+                  ? _getTitleBar()
+                  : _getTitleBarSkeleton(),
+              const SizedBox(height: 12),
+              RideStatus(
+                isEndRideWidget: _hasRideEnded,
+              ),
+            ],
+          ),
         ),
       );
     } else {
       content = _fullMapEnabled
           ? _getFullScreenMap()
-          : LiquidPullToRefresh(
-              animSpeedFactor: 2,
-              height: 200,
-              backgroundColor: ColorTheme.primary,
-              color: ColorTheme.primaryWithOpacity(.4),
-              showChildOpacityTransition: false,
-              onRefresh: () async {
-                Future.delayed(const Duration(seconds: 1), () {
-                  _getBusStatus(_userData[UserData.busRoute]);
-                });
-              },
+          : _getPullDown(
               child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
