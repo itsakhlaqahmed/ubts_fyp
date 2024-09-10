@@ -10,7 +10,7 @@ class RideStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     var heading = 'Bus hasn\'t started yet';
     var messsage =
-        'Your ride hasn\'t started yet. Once it begins, you\'ll see the map here.';
+        'Your ride hasn\'t started yet. Refresh the page after some time, once it begins, you\'ll see the map here.';
     if (isEndRideWidget == true) {
       heading = 'Bus has Arrived ...';
       messsage =
