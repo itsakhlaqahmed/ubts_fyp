@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ubts_fyp/models/user.dart';
 import 'package:ubts_fyp/pages/driver/driver_home.dart';
-import 'package:ubts_fyp/pages/home.dart';
+import 'package:ubts_fyp/pages/user/home.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/persistant_storage.dart';
 import 'package:ubts_fyp/services/user_db.dart';
