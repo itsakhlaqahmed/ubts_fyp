@@ -33,8 +33,11 @@ class MapLocationService {
   };
 
   // create new bus
-  Future<bool> initializeBus(String busId, Map<String, dynamic> busData) async {
+  Future<bool> endBusRide(String busId) async {
     final url = Uri.parse('$_databaseUrl/Buses/$busId.json');
+    final busData = {
+      'busStatus': 'ended',
+    };
     final response = await http.put(url, body: json.encode(busData));
 
     if (response.statusCode == 200) {
@@ -150,27 +153,5 @@ class MapLocationService {
       }
     }
     return polylineCoordinates;
-  }
-
-  // start sending data after an interval
-  startSendingData(int n) {}
-
-  Future<Map<String, dynamic>?> fakeFetchLocation(int num) async {
-    final url = Uri.parse('$_databaseUrl/fakeLocations/bus1.json');
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      log('data fetch success $num');
-
-      final Map<String, dynamic> data = json.decode(response.body);
-      final Map<String, dynamic> latestLocation =
-          data.entries.elementAt(num).value; // last value is the latest
-      log("latest location ****************** $latestLocation");
-      return latestLocation;
-    } else {
-      log(response.statusCode.toString());
-    }
-
-    return null;
   }
 }

@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:ubts_fyp/models/user.dart';
+import 'package:ubts_fyp/pages/driver/driver_home.dart';
 import 'package:ubts_fyp/pages/user/login.dart';
 import 'package:ubts_fyp/services/auth_service.dart';
 import 'package:ubts_fyp/services/map_location_service.dart';
@@ -73,11 +74,22 @@ class _StartRidePagetate extends State<DriverMapScreen> {
     }
   }
 
-  Future<void> _endLiveShare() async {
+  void _endLiveShare() {
     _timer?.cancel();
     // setState(() {
     //   _locationServiceRunning = false;
     // });
+  }
+
+  Future<void> _endBusRide() async {
+    _endLiveShare();
+    await _mapLocationService.endBusRide(widget.busId);
+    if (!mounted) return;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) => const DriverHome(),
+      ),
+    );
   }
 
   @override
@@ -133,7 +145,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
   void _signOut() async {
     await _authService.signOut();
     await PersistantStorage().deleteLocalUser();
-    await _endLiveShare();
+    _endLiveShare();
 
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
@@ -252,6 +264,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
       address: _address,
       fullMapEnabled: _fullMapEnabled,
       onExitFullScreen: _exitFullScreen,
+      onEndRide: _endBusRide,
     );
   }
 
@@ -292,6 +305,7 @@ class _StartRidePagetate extends State<DriverMapScreen> {
                               currentLocation: _currentLocation!,
                               address: _address,
                               onClickFullScreen: _enableFullScreen,
+                              onEndRide: _endBusRide,
                             )
                           : _getMapSkeleton(),
                       const SizedBox(

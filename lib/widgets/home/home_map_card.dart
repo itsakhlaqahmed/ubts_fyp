@@ -20,6 +20,7 @@ class HomeMapCard extends StatefulWidget {
     this.onExitFullScreen,
     this.onClickFullScreen,
     this.initialPosition,
+    this.onEndRide,
   });
 
   final String routeName;
@@ -30,6 +31,7 @@ class HomeMapCard extends StatefulWidget {
   final bool? fullMapEnabled;
   final Function? onExitFullScreen;
   final Function? onClickFullScreen;
+  final Function? onEndRide;
 
   @override
   State<HomeMapCard> createState() => _HomeMapCardState();
@@ -196,14 +198,17 @@ class _HomeMapCardState extends State<HomeMapCard> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        width: MediaQuery.of(context).size.width,
-                        child: WideButton(
-                            color: Color.fromARGB(255, 200, 2, 2),
-                            onSubmitForm: widget.onExitFullScreen!,
-                            buttonText: 'End Ride'),
-                      ),
+                      widget.onEndRide != null
+                          ? Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24),
+                              width: MediaQuery.of(context).size.width,
+                              child: WideButton(
+                                  color: const Color.fromARGB(255, 200, 2, 2),
+                                  onSubmitForm: widget.onEndRide!,
+                                  buttonText: 'End Ride'),
+                            )
+                          : const SizedBox.shrink(),
                     ],
                   ),
                 ),
@@ -288,6 +293,17 @@ class _HomeMapCardState extends State<HomeMapCard> {
                         onSubmitForm: widget.onClickFullScreen!,
                         buttonText: 'Full Map',
                       ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      widget.onEndRide != null
+                          // true
+                          ? WideButton(
+                              color: const Color.fromARGB(255, 200, 2, 2),
+                              onSubmitForm: widget.onEndRide!,
+                              buttonText: 'End Ride',
+                            )
+                          : const SizedBox.shrink(),
                     ],
                   ),
                 ),
