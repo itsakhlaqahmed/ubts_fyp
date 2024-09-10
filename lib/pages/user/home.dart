@@ -53,6 +53,7 @@ class _HomeState extends State<Home> {
   initState() {
     authenticateUser();
     _fetchLocalUser();
+    _getBusStatus(_userData[UserData.busRoute]);
     // _getBusStatus(_userData[UserData.busRoute]);
     super.initState();
     // _getMapData(_busId);
@@ -327,10 +328,9 @@ class _HomeState extends State<Home> {
               ? _getTitleBar()
               : _getTitleBarSkeleton(),
           const SizedBox(height: 12),
-          // NotApproved(
-          //   onSignout: _signOut,
-          // ),
-          const RideStatus(),
+          NotApproved(
+            onSignout: _signOut,
+          ),
         ],
       );
     } else {
