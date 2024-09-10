@@ -30,6 +30,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  flutter_launcher_icons: "^0.13.1"
 
 flutter:
   uses-material-design: true
@@ -39,11 +40,21 @@ flutter:
 
 flutter_native_splash:
   android: true
-  ios: true
+  ios: false
   web: false
-  background_image: assets/splash_background.png
+  background_image: "assets/splash_background.png"
   android_gravity: center
   fullscreen: true
   android_12:
-    color: "#5142f5" 
+    android: true
+    ios: false
+    web: false
+    image: "assets/splash_screen_logo.png"
+    fullscreen: true
+    color: "#017561"
 
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/splash_background.png"
+  min_sdk_android: 21
